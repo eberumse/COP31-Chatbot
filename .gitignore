@@ -1,0 +1,20 @@
+# --- Keep REAL briefing content out of the repository ---
+# The app loads real data by IMPORT on the device, never from a committed file.
+# These patterns are a safety net against accidentally committing sensitive material.
+*.private.json
+data/real*.json
+data/*.private.json
+briefing.json
+briefing-*.json
+/real/
+/private/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Local web-server / tooling logs
+*.log

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f3d2e" />
+  <title>Minister's Briefing — COP31</title>
+  <meta name="description" content="At-a-glance briefing for the Minister's next engagement." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Briefing" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- App bar -->
+  <header class="appbar">
+    <div class="appbar-inner">
+      <button id="btnBack" class="iconbtn" aria-label="Back to next engagement" hidden>‹</button>
+      <div class="appbar-title">
+        <span class="appbar-eyebrow" id="confName">COP31</span>
+        <strong id="ministerName">Minister's Briefing</strong>
+      </div>
+      <button id="btnMenu" class="iconbtn" aria-label="Menu">⋮</button>
+    </div>
+  </header>
+
+  <!-- Sample-data / status banner -->
+  <div id="banner" class="banner" hidden></div>
+
+  <main id="view" class="view" aria-live="polite">
+    <!-- Rendered by app.js -->
+  </main>
+
+  <!-- Bottom nav -->
+  <nav class="tabbar">
+    <button class="tab is-active" data-view="next" id="tabNext">
+      <span class="tab-ico">📍</span><span>Next</span>
+    </button>
+    <button class="tab" data-view="agenda" id="tabAgenda">
+      <span class="tab-ico">🗓️</span><span>Agenda</span>
+    </button>
+    <button class="tab" data-view="settings" id="tabSettings">
+      <span class="tab-ico">⚙️</span><span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Hidden file input for importing content -->
+  <input type="file" id="fileInput" accept="application/json,.json" hidden />
+
+  <!-- Menu sheet -->
+  <div id="sheet" class="sheet" hidden>
+    <div class="sheet-backdrop" data-close-sheet></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="sheet-handle"></div>
+      <button class="sheet-item" id="miImport"><span>📥</span> Import briefing file…</button>
+      <button class="sheet-item" id="miReset"><span>♻️</span> Reset to sample data</button>
+      <button class="sheet-item" id="miTime"><span>⏱️</span> Simulate a time (demo)</button>
+      <button class="sheet-item" id="miAbout"><span>ℹ️</span> About &amp; privacy</button>
+      <button class="sheet-item sheet-cancel" data-close-sheet>Cancel</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

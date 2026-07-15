@@ -1,0 +1,544 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "isSampleData": true,
+    "conference": "COP31 — UN Climate Change Conference",
+    "host": "Belém, Brazil (Blue Zone)",
+    "updatedLabel": "Sample data — 15 Jul 2026, 07:00",
+    "minister": {
+      "name": "Hon. Amara Solé",
+      "title": "Minister for Climate & Environment",
+      "country": "Republic of Meridia",
+      "flag": "🇺🇳"
+    },
+    "note": "ALL NAMES AND CONTENT BELOW ARE FICTIONAL AND FOR TESTING ONLY. Replace with your own data before real use."
+  },
+  "engagements": [
+    {
+      "id": "d1-01",
+      "day": 1,
+      "start": "2026-07-15T08:30:00",
+      "end": "2026-07-15T09:00:00",
+      "title": "Delegation morning huddle",
+      "type": "internal",
+      "venue": "Meridia Delegation Office, Blue Zone Level 2",
+      "counterpart": null,
+      "objectives": [
+        "Confirm today's negotiating priorities and any overnight text changes",
+        "Align lines for the Germany and Brazil bilaterals"
+      ],
+      "talkingPoints": [
+        "Overnight: draft cover decision now references 'phase-down of unabated fossil fuels' — hold our position for stronger language",
+        "Finance is the day's battleground — keep the $300bn/yr floor as our anchor number",
+        "Press likely to ask about our new 2035 NDC — stick to agreed line, no new numbers"
+      ],
+      "redLines": [
+        "Do not pre-announce the adaptation pledge before the Thursday plenary"
+      ],
+      "desiredOutcome": "Team aligned; Minister clear on the three asks for the day.",
+      "staffContact": "Lead Negotiator — J. Okafor"
+    },
+    {
+      "id": "d1-02",
+      "day": 1,
+      "start": "2026-07-15T09:30:00",
+      "end": "2026-07-15T10:15:00",
+      "title": "Bilateral: Germany",
+      "type": "bilateral",
+      "venue": "Bilateral Room 4B, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Dr. Klara Böhm",
+        "title": "Federal Minister for Economic Affairs & Climate Action",
+        "country": "Germany",
+        "flag": "🇩🇪",
+        "photo": null,
+        "profile": "Career economist, second COP as minister. Pragmatic, detail-driven, pushes hard on carbon-market integrity. Values punctuality and concrete follow-ups. Good personal rapport with the Minister since the Berlin visit."
+      },
+      "objectives": [
+        "Secure Germany's co-sponsorship of the adaptation finance text",
+        "Explore a bilateral green-hydrogen partnership"
+      ],
+      "talkingPoints": [
+        "Thank Germany for €50m contribution to the Loss & Damage Fund — momentum we want to build on",
+        "Ask: will Germany co-sponsor our adaptation finance amendment? We need a G7 anchor",
+        "Offer: Meridia can host a green-hydrogen pilot; propose officials meet in Q4",
+        "Article 6 — we're aligned on strong integrity rules; coordinate floor positions"
+      ],
+      "redLines": [
+        "Avoid committing to a specific hydrogen investment figure",
+        "Do not link adaptation support to any trade concessions"
+      ],
+      "desiredOutcome": "Germany verbally agrees to co-sponsor the adaptation text; officials tasked on hydrogen.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+    {
+      "id": "d1-03",
+      "day": 1,
+      "start": "2026-07-15T10:30:00",
+      "end": "2026-07-15T11:00:00",
+      "title": "High Ambition Coalition ministerial",
+      "type": "coalition",
+      "venue": "Room Amazonia 1, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Keep the coalition united behind a 1.5°C-aligned cover decision",
+        "Position Meridia as a bridge between developed and vulnerable members"
+      ],
+      "talkingPoints": [
+        "Reaffirm: no backsliding on the 1.5°C temperature goal in the cover text",
+        "Push for a collective call to peak global emissions before 2027",
+        "Signal Meridia will help broker language with the G77 on finance"
+      ],
+      "redLines": [
+        "Do not isolate the small-island members on the mitigation timeline"
+      ],
+      "desiredOutcome": "Coalition agrees a joint line on 1.5°C to carry into plenary.",
+      "staffContact": "Coalitions Lead — M. Adeyemi"
+    },
+    {
+      "id": "d1-04",
+      "day": 1,
+      "start": "2026-07-15T11:30:00",
+      "end": "2026-07-15T12:15:00",
+      "title": "Bilateral: Brazil (COP31 Presidency)",
+      "type": "bilateral",
+      "venue": "Presidency Suite, Blue Zone Level 3",
+      "counterpart": {
+        "name": "Sr. Rafael Mendonça",
+        "title": "Minister of the Environment & Climate Change",
+        "country": "Brazil",
+        "flag": "🇧🇷",
+        "profile": "As COP President, focused on landing a balanced package. Warm, relationship-first style. Sensitive about Amazon/forest framing. Wants visible wins on forests and finance to define the presidency."
+      },
+      "objectives": [
+        "Understand the Presidency's landing zone on finance",
+        "Offer Meridia's support to broker the adaptation package"
+      ],
+      "talkingPoints": [
+        "Congratulate the Presidency on the forests initiative — Meridia wants to be an early partner",
+        "Ask: what's the Presidency's realistic landing zone on the finance number?",
+        "Offer: we can help bring vulnerable states along if the text protects adaptation",
+        "Flag: our red line is retaining the 1.5°C language — we'll defend it publicly"
+      ],
+      "redLines": [
+        "Do not criticise the Presidency's process in front of others",
+        "Avoid any comment on internal Brazilian politics"
+      ],
+      "desiredOutcome": "Clear read on the Presidency's finance landing zone; Meridia positioned as a trusted broker.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+    {
+      "id": "d1-05",
+      "day": 1,
+      "start": "2026-07-15T13:00:00",
+      "end": "2026-07-15T13:20:00",
+      "title": "Media doorstep",
+      "type": "press",
+      "venue": "Media Zone, Blue Zone entrance",
+      "counterpart": null,
+      "objectives": [
+        "Project ambition and unity; avoid new commitments"
+      ],
+      "talkingPoints": [
+        "Meridia is here to keep 1.5°C alive and secure real money for adaptation",
+        "We're encouraged by the Presidency's leadership on forests",
+        "If pressed on our NDC: 'We'll announce our updated plan at the right moment this week'"
+      ],
+      "redLines": [
+        "No new numbers on finance or NDC",
+        "Do not comment on any other country's domestic policy"
+      ],
+      "desiredOutcome": "Clean, on-message clips; no unintended headlines.",
+      "staffContact": "Comms — L. Fernandes"
+    },
+    {
+      "id": "d1-06",
+      "day": 1,
+      "start": "2026-07-15T14:00:00",
+      "end": "2026-07-15T14:45:00",
+      "title": "Climate Finance roundtable",
+      "type": "roundtable",
+      "venue": "Room Tapajós, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Build a critical mass behind the $300bn/yr adaptation floor",
+        "Test appetite for a new grants-based instrument"
+      ],
+      "talkingPoints": [
+        "Anchor: adaptation finance must have a $300bn/yr floor by 2030, grants-based not loans",
+        "Vulnerable states cannot take on more debt for a crisis they did not cause",
+        "Propose: a dedicated grants window under the existing fund — no new bureaucracy",
+        "Ask developed partners to signal replenishment numbers this week"
+      ],
+      "redLines": [
+        "Do not accept loan-based instruments as counting toward the floor"
+      ],
+      "desiredOutcome": "At least three donor countries signal support for a grants window.",
+      "staffContact": "Finance Lead — P. Nwosu"
+    },
+    {
+      "id": "d1-07",
+      "day": 1,
+      "start": "2026-07-15T15:30:00",
+      "end": "2026-07-15T16:15:00",
+      "title": "Bilateral: Tuvalu (Pacific SIDS)",
+      "type": "bilateral",
+      "venue": "Bilateral Room 2A, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Hon. Tavita Faleolo",
+        "title": "Minister for Climate Resilience",
+        "country": "Tuvalu",
+        "flag": "🇹🇻",
+        "profile": "Passionate advocate for island survival; speaks powerfully on existential risk. Expects solidarity, not sympathy. Deep expertise on loss & damage. A key voice Meridia wants firmly alongside us."
+      },
+      "objectives": [
+        "Reaffirm Meridia's solidarity with Pacific SIDS",
+        "Coordinate a joint push on loss & damage disbursement"
+      ],
+      "talkingPoints": [
+        "Meridia stands with the Pacific — your survival is non-negotiable in this text",
+        "Propose a joint statement: the Loss & Damage Fund must start disbursing in 2026, not 2027",
+        "We'll amplify SIDS priorities in the High Ambition Coalition",
+        "Ask: what one outcome would make COP31 a success for Tuvalu?"
+      ],
+      "redLines": [
+        "Do not appear to trade away SIDS priorities for the finance deal"
+      ],
+      "desiredOutcome": "Agreement to issue a joint loss & damage statement Wednesday.",
+      "staffContact": "Coalitions Lead — M. Adeyemi"
+    },
+    {
+      "id": "d1-08",
+      "day": 1,
+      "start": "2026-07-15T17:00:00",
+      "end": "2026-07-15T17:30:00",
+      "title": "Article 6 carbon markets — technical huddle",
+      "type": "internal",
+      "venue": "Meridia Delegation Office, Blue Zone Level 2",
+      "counterpart": null,
+      "objectives": [
+        "Decide Meridia's fallback position on Article 6.4 integrity rules"
+      ],
+      "talkingPoints": [
+        "Where can we compromise on baselines without weakening environmental integrity?",
+        "Confirm our line on avoiding double-counting — this stays firm",
+        "Brief the Minister on tomorrow's EU bilateral asks"
+      ],
+      "redLines": [
+        "No agreement that permits double-counting of credits"
+      ],
+      "desiredOutcome": "Agreed fallback position documented for negotiators.",
+      "staffContact": "Lead Negotiator — J. Okafor"
+    },
+
+    {
+      "id": "d2-01",
+      "day": 2,
+      "start": "2026-07-16T09:00:00",
+      "end": "2026-07-16T09:45:00",
+      "title": "Bilateral: European Union",
+      "type": "bilateral",
+      "venue": "Bilateral Room 4B, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Commissioner Elena Novak",
+        "title": "European Commissioner for Climate Action",
+        "country": "European Union",
+        "flag": "🇪🇺",
+        "profile": "Speaks for 27 member states; highly strategic. Focused on carbon border measures and finance credibility. Prefers structured agendas. Can unlock significant finance if the ambition case is made well."
+      },
+      "objectives": [
+        "Seek EU flexibility on the grants-based adaptation window",
+        "Manage concerns about carbon border measures on Meridia exports"
+      ],
+      "talkingPoints": [
+        "Welcome EU leadership on ambition; we want the EU as our finance partner",
+        "Ask: can the EU support a grants-based adaptation window, not just loans?",
+        "Raise sensitively: carbon border measures are hitting our exporters — seek a dialogue",
+        "Offer: Meridia will back strong Article 6 integrity rules the EU cares about"
+      ],
+      "redLines": [
+        "Do not accept linkage between finance and our trade position",
+        "Avoid public criticism of the EU carbon border mechanism"
+      ],
+      "desiredOutcome": "EU opens door to grants window; agrees officials-level trade dialogue.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+    {
+      "id": "d2-02",
+      "day": 2,
+      "start": "2026-07-16T10:30:00",
+      "end": "2026-07-16T11:15:00",
+      "title": "Loss & Damage Fund — Board session",
+      "type": "roundtable",
+      "venue": "Room Xingu, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Push for disbursement to begin in 2026",
+        "Protect grants-based, direct-access design"
+      ],
+      "talkingPoints": [
+        "The Fund exists — now it must deliver; first disbursements should flow in 2026",
+        "Direct access for vulnerable states is essential; minimise intermediaries",
+        "Support simplified access for small island and least-developed states",
+        "Meridia will contribute technical experts to the operating committee"
+      ],
+      "redLines": [
+        "Do not support a design that routes everything through existing slow channels"
+      ],
+      "desiredOutcome": "Board agrees a 2026 disbursement timeline and simplified access track.",
+      "staffContact": "Finance Lead — P. Nwosu"
+    },
+    {
+      "id": "d2-03",
+      "day": 2,
+      "start": "2026-07-16T11:30:00",
+      "end": "2026-07-16T12:00:00",
+      "title": "National Statement — High-Level Segment",
+      "type": "plenary",
+      "venue": "Plenary Hall Amazônia, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Deliver Meridia's headline positions to the full conference",
+        "Announce the updated 2035 NDC"
+      ],
+      "talkingPoints": [
+        "Announce: Meridia's updated NDC — 60% emissions cut by 2035 (agreed line, deliver exactly)",
+        "Call for a $300bn/yr adaptation finance floor, grants-based",
+        "Defend 1.5°C as the line the world cannot cross",
+        "Solidarity with SIDS and LDCs — loss & damage must deliver now"
+      ],
+      "redLines": [
+        "Deliver the NDC figure exactly as cleared — no deviation",
+        "Keep to the 3-minute time limit"
+      ],
+      "desiredOutcome": "Statement delivered cleanly; NDC lands as a credible ambition signal.",
+      "staffContact": "Comms — L. Fernandes / Speechwriter"
+    },
+    {
+      "id": "d2-04",
+      "day": 2,
+      "start": "2026-07-16T13:30:00",
+      "end": "2026-07-16T14:15:00",
+      "title": "Bilateral: Indonesia",
+      "type": "bilateral",
+      "venue": "Bilateral Room 1C, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Ibu Sari Wibowo",
+        "title": "Minister of Environment & Forestry",
+        "country": "Indonesia",
+        "flag": "🇮🇩",
+        "profile": "Leads on forests, peatlands and just transition from coal. Balances development and climate pressures. Interested in South-South cooperation and blended finance. Warm but firm on sovereignty over resources."
+      },
+      "objectives": [
+        "Explore South-South cooperation on forests and just transition",
+        "Coordinate G77 positioning on finance"
+      ],
+      "talkingPoints": [
+        "Propose a South-South knowledge partnership on peatland and forest restoration",
+        "Align G77 messaging: finance must be additional, predictable and grants-based",
+        "Explore joint interest in a just-transition financing facility for coal regions",
+        "Reaffirm respect for sovereign resource decisions while raising ambition"
+      ],
+      "redLines": [
+        "Avoid any suggestion of conditions on Indonesia's domestic resource policy"
+      ],
+      "desiredOutcome": "Agreement to launch an officials-level forests partnership.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+    {
+      "id": "d2-05",
+      "day": 2,
+      "start": "2026-07-16T15:00:00",
+      "end": "2026-07-16T15:45:00",
+      "title": "Just Transition side event (panel)",
+      "type": "side_event",
+      "venue": "Meridia Pavilion, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Showcase Meridia's just-transition model",
+        "Attract partners to our transition financing facility"
+      ],
+      "talkingPoints": [
+        "Share Meridia's story: retraining coal workers into renewables manufacturing",
+        "A just transition is a political precondition for ambition — no one left behind",
+        "Invite partners to co-fund our just-transition facility",
+        "Keep it human — lead with the workers' stories, not just numbers"
+      ],
+      "redLines": [
+        "Do not overstate results — stick to verified figures in the brief"
+      ],
+      "desiredOutcome": "Strong panel; at least one partner expresses interest in co-funding.",
+      "staffContact": "Comms — L. Fernandes"
+    },
+    {
+      "id": "d2-06",
+      "day": 2,
+      "start": "2026-07-16T16:30:00",
+      "end": "2026-07-16T17:15:00",
+      "title": "Bilateral: United Kingdom",
+      "type": "bilateral",
+      "venue": "Bilateral Room 3A, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Rt Hon. James Whitfield MP",
+        "title": "Secretary of State for Energy Security & Net Zero",
+        "country": "United Kingdom",
+        "flag": "🇬🇧",
+        "profile": "Politically focused on clean-power investment and finance mobilisation. Quick, outcome-oriented, likes a concrete deliverable to announce. Strong on mobilising private finance and multilateral bank reform."
+      },
+      "objectives": [
+        "Enlist UK support for multilateral development bank reform",
+        "Coordinate on mobilising private adaptation finance"
+      ],
+      "talkingPoints": [
+        "Thank the UK for its clean-power leadership; we want to partner on finance",
+        "Ask: will the UK champion MDB reform to unlock climate lending at scale?",
+        "Explore a joint initiative to de-risk private adaptation investment",
+        "Coordinate High Ambition Coalition lines for the final days"
+      ],
+      "redLines": [
+        "Do not commit Meridia to any private-finance guarantee mechanism yet"
+      ],
+      "desiredOutcome": "UK agrees to co-champion MDB reform language in the cover text.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+
+    {
+      "id": "d3-01",
+      "day": 3,
+      "start": "2026-07-17T09:00:00",
+      "end": "2026-07-17T09:45:00",
+      "title": "Bilateral: India",
+      "type": "bilateral",
+      "venue": "Bilateral Room 4B, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Shri Arjun Nair",
+        "title": "Minister of Environment, Forest & Climate Change",
+        "country": "India",
+        "flag": "🇮🇳",
+        "profile": "Champions equity and 'common but differentiated responsibilities'. Strong on solar and development-first framing. Influential across the G77. Values respect for historical responsibility and development space."
+      },
+      "objectives": [
+        "Align on equity framing without splitting from the High Ambition Coalition",
+        "Explore solar and grids cooperation"
+      ],
+      "talkingPoints": [
+        "Acknowledge equity and differentiated responsibility — we share this framing",
+        "Seek India's help to bridge G77 and High Ambition Coalition on the cover text",
+        "Propose cooperation on solar manufacturing and regional grids",
+        "Emphasise: developed countries must deliver finance first"
+      ],
+      "redLines": [
+        "Do not let equity framing be used to weaken the 1.5°C language"
+      ],
+      "desiredOutcome": "India agrees to help broker G77 buy-in on the cover decision.",
+      "staffContact": "Bilaterals Desk — S. Rahman"
+    },
+    {
+      "id": "d3-02",
+      "day": 3,
+      "start": "2026-07-17T10:30:00",
+      "end": "2026-07-17T11:15:00",
+      "title": "AOSIS coalition meeting",
+      "type": "coalition",
+      "venue": "Room Marajó, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Lock in a unified small-island position for the endgame",
+        "Confirm the joint loss & damage statement"
+      ],
+      "talkingPoints": [
+        "Reaffirm Meridia's solidarity — we will not let 1.5°C be traded away",
+        "Confirm the joint loss & damage disbursement statement for release today",
+        "Coordinate red lines for the final cover-decision negotiations",
+        "Agree who speaks for the group in the closing plenary"
+      ],
+      "redLines": [
+        "Do not undercut AOSIS unity in side conversations with larger powers"
+      ],
+      "desiredOutcome": "Unified AOSIS endgame position and speaking plan agreed.",
+      "staffContact": "Coalitions Lead — M. Adeyemi"
+    },
+    {
+      "id": "d3-03",
+      "day": 3,
+      "start": "2026-07-17T11:30:00",
+      "end": "2026-07-17T12:15:00",
+      "title": "Bilateral: China",
+      "type": "bilateral",
+      "venue": "Bilateral Room 5A, Blue Zone Pavilion Hall",
+      "counterpart": {
+        "name": "Mr. Li Wenqiang",
+        "title": "Special Envoy for Climate Change",
+        "country": "China",
+        "flag": "🇨🇳",
+        "profile": "Highly experienced negotiator; measured and strategic. Focused on renewables scale-up and differentiated responsibility. Prefers quiet diplomacy over public asks. Decisive on whether the endgame lands."
+      },
+      "objectives": [
+        "Understand China's bottom line on the cover decision",
+        "Explore cooperation on affordable renewables supply chains"
+      ],
+      "talkingPoints": [
+        "Recognise China's scale in renewables — vital to global success",
+        "Ask, quietly: what does China need to accept stronger cover-decision language?",
+        "Explore access to affordable solar and battery supply for Meridia's transition",
+        "Emphasise our shared interest in a stable, predictable finance architecture"
+      ],
+      "redLines": [
+        "Keep asks private — no public pressure that could harden positions",
+        "Do not stray into non-climate bilateral issues"
+      ],
+      "desiredOutcome": "Clear read on China's endgame bottom line; renewables dialogue opened.",
+      "staffContact": "Bilaterals Desk — S. Rahman / Lead Negotiator"
+    },
+    {
+      "id": "d3-04",
+      "day": 3,
+      "start": "2026-07-17T14:00:00",
+      "end": "2026-07-17T15:00:00",
+      "title": "Cover decision — closing negotiations",
+      "type": "plenary",
+      "venue": "Plenary Hall Amazônia, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Hold the 1.5°C and adaptation-finance lines in the final text",
+        "Land an outcome Meridia can publicly support"
+      ],
+      "talkingPoints": [
+        "Non-negotiable: retain explicit 1.5°C language",
+        "Push to the end for the grants-based adaptation finance floor",
+        "Support the Presidency's package if our two red lines hold",
+        "Coordinate live with AOSIS and the High Ambition Coalition on the floor"
+      ],
+      "redLines": [
+        "Do not agree to a text that drops 1.5°C or converts adaptation finance to loans"
+      ],
+      "desiredOutcome": "Final text retains 1.5°C and a grants-based adaptation commitment.",
+      "staffContact": "Lead Negotiator — J. Okafor"
+    },
+    {
+      "id": "d3-05",
+      "day": 3,
+      "start": "2026-07-17T15:30:00",
+      "end": "2026-07-17T16:00:00",
+      "title": "Closing press conference",
+      "type": "press",
+      "venue": "Press Conference Room 1, Blue Zone",
+      "counterpart": null,
+      "objectives": [
+        "Frame the outcome as a step forward driven by ambition and solidarity"
+      ],
+      "talkingPoints": [
+        "Lead with the win: 1.5°C held, and real movement on adaptation finance",
+        "Credit the coalition and SIDS partners — this was collective",
+        "Be honest where it fell short, but forward-looking on next steps",
+        "Thank the Brazilian Presidency for a balanced outcome"
+      ],
+      "redLines": [
+        "Do not overclaim; keep to agreed outcome lines",
+        "No criticism of specific countries by name"
+      ],
+      "desiredOutcome": "Positive, credible closing narrative; clips reinforce Meridia's leadership.",
+      "staffContact": "Comms — L. Fernandes"
+    }
+  ]
+}
