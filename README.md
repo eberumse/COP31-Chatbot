@@ -1,111 +1,82 @@
-# Minister's Briefing — COP31
+# COP31 Brief Buddy
 
-A phone/iPad app that gives the Minister a **glanceable refresher right before each
-engagement**: the time, venue, who they're meeting, the key talking points, objectives,
-red lines to avoid, and the desired outcome — without wading through the full briefing pack.
+A phone/iPad app that gives a Minister an **at-a-glance briefing for their next engagement** at
+COP31 — time, venue, counterpart, the talking points to deliver, objectives, the one thing to
+avoid, and a source-grounded **Ask** — without wading through the full briefing pack.
 
-It is a **Progressive Web App (PWA)**: it installs to the home screen, opens like a normal
-app, and **works fully offline**. There is **no server and no login**. All briefing content
-lives **only on the device**.
+Installable (PWA), **switchable light/dark**, and phone-first. Everything here is **fictional
+sample data** for testing (Singapore delegation, anonymised "Minister A", a placeholder portrait).
 
-> ⚠️ **The content in this repository is 100% fictional sample data** (a made-up country,
-> "Republic of Meridia", and invented counterparts) so the app can be built and tested in
-> the open. **No real or sensitive briefing material is stored here.** See
-> [`docs/SECURITY.md`](docs/SECURITY.md) for how real data is kept off GitHub.
+> ⚠️ No real or classified material is stored in this repository. See
+> [`docs/SECURITY.md`](docs/SECURITY.md) for how real content is handled.
 
 ---
 
-## What it looks like
+## The four tabs
 
-| Next engagement | Agenda | Full briefing |
-|---|---|---|
-| Opens straight to the next meeting with a countdown ("in 10 min"), counterpart, talking points, objectives, red lines. | The full day, tab by tab, with the current/next meeting flagged. | Tap any engagement for the complete card. |
+| Tab | What it does |
+|---|---|
+| **Next** | The immediate engagement as a glanceable hero: countdown, venue, walk time, **risk flags**, objective, **talking points with source citations**, **watch point**, **"if asked"** line, counterpart card (photo, portfolio, **public context**), and **what changed**. |
+| **Schedule** | The full day's timeline; the current/next item is flagged, briefed items open their brief. |
+| **Briefs** | Pick **any** engagement and read its full AI-generated, source-grounded brief. |
+| **Ask** | Pick **any** brief and ask about it. Quick modes (60-sec brief, **anticipated questions**, what changed, source trace, watch point) plus free text — with a **"not in the approved pack, won't invent"** guardrail. |
 
-Three tabs: **Next** · **Agenda** · **Settings**.
-
----
-
-## The idea in one line
-
-> The AI does the summarising **during preparation** — condensing your long briefs into a
-> short gist — and only that finished gist is loaded into the app. In the meeting, the app
-> just **displays** it. Nothing is sent anywhere, and there is no risk of an AI improvising a
-> talking point live in front of a counterpart.
-
-You still get "AI summarises the key points" — it just happens at prep time, not meeting
-time. See [`docs/PREP-PROMPT.md`](docs/PREP-PROMPT.md) for a ready-made prompt that turns a
-full brief into the app's format using whatever AI tool your office is cleared to use.
+Deep links for testing: `#next`, `#schedule`, `#briefs`, `#ask`, `#settings`, `#e/<id>`, and `?theme=dark|light`.
 
 ---
 
-## Try it now (2 minutes)
+## How the AI fits (two phases)
 
-You need any static web server (because service workers don't run from `file://`).
+This repo is the **Minister-facing front end**. The full picture is two pieces:
+
+1. **Staff console** *(next phase — not built yet)* — where staff upload the full briefs and an
+   **approved enterprise AI** (e.g. ChatGPT Enterprise / a cleared model) summarises them into the
+   structured brief the app shows, with a review/approve step.
+2. **Brief Buddy** *(this app)* — displays the approved briefs and provides the source-grounded
+   **Ask**. In the current mock, Ask answers from the loaded brief (rules-based); it can later call
+   the same enterprise AI.
+
+So the AI does the heavy summarising once, at prep time; the Minister sees clean, approved output.
+
+---
+
+## Try it
 
 ```bash
-# from the project folder:
-python3 -m http.server 8137
-# then open http://localhost:8137 in a browser
+python3 -m http.server 8140      # then open http://localhost:8140
 ```
 
-Because the sample conference dates may be in the past/future relative to today, the app
-shows a **simulated "Day 1, 09:20"** so you always see a live "next engagement". Go to
-**Settings → Simulate a time** to jump to any moment, or **Reset to sample data** to start over.
+Because the sample dates may not match today, the app shows a **simulated "≈15:05"** so "Next"
+always has something live. Use **Settings → Simulate a time** to move around the day, or the theme
+control to switch **light/dark**.
 
-## Put it on the Minister's phone or iPad
-
-1. Publish the app shell once (e.g. **GitHub Pages** — see [`docs/DEPLOY.md`](docs/DEPLOY.md)).
-   The shell contains only code + sample data, so hosting it publicly is fine.
-2. On the phone, open the link in **Safari (iPhone/iPad)** or **Chrome (Android)**.
-3. **Add to Home Screen** (Safari: Share → *Add to Home Screen*).
-4. Open it from the home screen — it now runs like an app and works offline.
-5. To load the **real** schedule, use **Settings → Import briefing file** and pick the JSON
-   file you prepared. That file stays on the device; it never touches GitHub.
-
-Works on **any modern phone** — an iPad is not required.
+**On a phone:** publish once (GitHub Pages — see [`docs/DEPLOY.md`](docs/DEPLOY.md)), open the link,
+and **Add to Home Screen**.
 
 ---
 
-## Replacing the sample data with your own
+## Using your own content
 
-The whole app is driven by one file: [`data/schedule.sample.json`](data/schedule.sample.json).
-You don't edit code — you just prepare a JSON file in the same shape and import it.
+The app is driven by one file: [`data/schedule.sample.json`](data/schedule.sample.json). You don't
+edit code — you prepare a file in the same shape and **Settings → Import** it.
 
-- **How to author it:** [`docs/AUTHORING.md`](docs/AUTHORING.md) (the data model, field by field).
-- **How to generate it from full briefs with AI:** [`docs/PREP-PROMPT.md`](docs/PREP-PROMPT.md).
-- **How to keep real data off GitHub:** [`docs/SECURITY.md`](docs/SECURITY.md).
-
-"Easy re-sync": when the schedule changes mid-conference, prepare an updated file and
-**Import** it again — the app refreshes and keeps working offline.
+- **Data model, field by field:** [`docs/AUTHORING.md`](docs/AUTHORING.md)
+- **Generate it from full briefs with AI:** [`docs/PREP-PROMPT.md`](docs/PREP-PROMPT.md)
+- **Security model:** [`docs/SECURITY.md`](docs/SECURITY.md)
 
 ---
 
-## How it's built (for whoever maintains it)
-
-Plain HTML/CSS/JavaScript — **no frameworks, no build step, no dependencies**. That keeps it
-easy to audit (important for a security-conscious office) and trivial to host.
+## Files
 
 | File | Purpose |
 |---|---|
-| `index.html` | App shell (markup only). |
-| `styles.css` | All styling; light + automatic dark mode. |
-| `app.js` | All logic: next-engagement, agenda, detail, import/export, offline. |
-| `data/schedule.sample.json` | Fictional sample content. Replace via **Import** (not by committing real data). |
-| `manifest.webmanifest` | PWA metadata (name, icons, home-screen behaviour). |
-| `service-worker.js` | Offline cache of the app shell. |
-| `icons/` | App icons. |
-| `docs/` | Deploy / authoring / security / prep-prompt guides. |
+| `index.html` · `styles.css` · `app.js` | The app (no framework, no build step). |
+| `styles.css` | Light + dark themes via `data-theme`. |
+| `data/schedule.sample.json` | Fictional sample content (schema v2). |
+| `assets/counterpart-minister-a.svg` | Placeholder counterpart portrait (illustrative — not a real person). |
+| `manifest.webmanifest` · `service-worker.js` | PWA install + offline shell. |
+| `icons/` · `docs/` | App icons · deploy / authoring / security / prep-prompt guides. |
 
-Deep links for testing: `#agenda`, `#settings`, `#e/<engagement-id>`.
-
----
-
-## Privacy & security summary
-
-- **No sensitive data in this repo** — only fictional sample content.
-- **Real briefings never leave the device** — they're imported locally and stored on the
-  device only; nothing is uploaded.
-- **No network at runtime** — after first load the app is fully offline.
-- **No AI in the meeting** — summaries are prepared in advance and only displayed.
-
-Full detail: [`docs/SECURITY.md`](docs/SECURITY.md).
+Built as a front-end mock with fictional data. Renamed from the earlier "Minister's Briefing"
+prototype; enhanced with ideas from the ChatGPT-assisted mock-up (rich brief model, source
+citations, red-team questions, the Ask tab, and the command-console dark theme).

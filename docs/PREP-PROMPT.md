@@ -1,75 +1,60 @@
-# Prep prompt — turn a full brief into the app's format with AI
+# Prep prompt — turn a full brief into a Brief Buddy engagement
 
-This is the step where **the AI does the summarising** — during preparation, in your own
-secure environment, using whatever AI tool your office is cleared to use for the material.
-It never involves this GitHub repo or any public service.
-
-## How to use it
-
-1. Open your **approved** AI tool (the one authorised for this classification of material).
-2. Paste the prompt below.
-3. Paste **one engagement's full briefing pack** after it (or several, one after another).
-4. The AI returns a JSON object in the app's shape.
-5. **Read it and fix anything** — wording in a diplomatic setting must be human-approved.
-6. Collect the objects into the `engagements` array of your briefing file (see
-   [`AUTHORING.md`](AUTHORING.md)), set `"isSampleData": false`, and import it on the device.
-
----
-
-## The prompt (copy everything in the box)
+Use this in your **approved enterprise AI** (e.g. ChatGPT Enterprise, or another model cleared for
+the material) to condense a full briefing pack into one engagement object in the app's v2 shape.
+Paste the prompt, then the brief. **Review the output** before loading it — diplomatic wording must
+be human-checked.
 
 ```
-You are helping prepare a concise, glanceable briefing card for a Minister to read in the
-30 seconds before walking into a meeting at an international conference. Read the full
-briefing material I provide and condense it into a single JSON object in EXACTLY this shape:
+You produce a concise, glanceable ministerial briefing card from the full briefing material I give
+you. Return ONE JSON object in EXACTLY this shape (COP31 Brief Buddy, schema v2):
 
 {
-  "id": "",                     // leave "" — I will assign it
-  "day": 1,                     // conference day number if known, else 1
-  "start": "YYYY-MM-DDTHH:MM:SS",// local time, no timezone; use the briefing's time
+  "id": "",                       // short slug, e.g. "bilat-country-a"
+  "day": 1,
+  "start": "YYYY-MM-DDTHH:MM:SS",  // local time, no timezone
   "end": "YYYY-MM-DDTHH:MM:SS",
-  "title": "",                  // short, e.g. "Bilateral: Germany"
-  "type": "bilateral",          // bilateral | coalition | roundtable | plenary | press | internal | side_event
+  "title": "",                    // e.g. "Bilateral with Minister A"
+  "type": "Bilateral",            // Bilateral | Plenary | Roundtable | Media | Coalition | Internal
   "venue": "",
-  "counterpart": {              // null if there is no single counterpart (e.g. internal/press)
-    "name": "",
-    "title": "",
-    "country": "",
-    "flag": "",                 // emoji flag if known, else ""
-    "profile": "",              // 2-3 sentences: their style, priorities, and any rapport
-    "photo": null
+  "walkTime": "",                 // e.g. "6 min walk" if known, else ""
+  "version": "v1",
+  "initialBriefDate": "YYYY-MM-DD",
+  "currentBriefDate": "YYYY-MM-DD",
+  "objective": "",                // one line
+  "tone": "",                     // delivery tone, one line
+  "flags": [],                    // short risk chips, e.g. "Media-sensitive"
+  "counterpart": {
+    "initials": "", "name": "", "role": "", "country": "", "flag": "",
+    "portfolio": "",
+    "photo": null, "photoNote": "",
+    "publicContext": "",          // their PUBLIC line only (open sources), kept separate
+    "publicSources": []
   },
-  "objectives": [],             // 2-3 KEY objectives to achieve
-  "talkingPoints": [],          // 3-5 punchy lines — the gist the Minister must convey
-  "redLines": [],               // things to avoid / sensitivities
-  "desiredOutcome": "",         // one line: what success looks like
-  "staffContact": ""            // supporting staffer if named
+  "sayThis": [],                  // 3-5 short talking points the Minister must convey
+  "sources": [],                  // one citation per talking point, e.g. "brief.pdf · v4 · p.2 ¶4"
+  "watchPoint": "",               // the single most important thing to AVOID
+  "ifAsked": "",                  // fallback line if pressed
+  "changed": [],                  // what changed since the previous version (empty if v1)
+  "redTeam": [ { "q": "", "basis": "" } ]   // likely/hostile questions + why
 }
 
 Rules:
-- Be faithful to the source. Do NOT invent facts, numbers, names, commitments, or positions.
-  If something isn't in the material, leave the field empty rather than guessing.
-- Talking points must be short enough to scan at a glance — imperative phrases, not paragraphs.
-- Preserve exact figures and any wording the Minister must deliver verbatim; note "(deliver
-  exactly)" where the source says a line is agreed/cleared.
-- Keep red lines blunt and specific.
-- Output ONLY the JSON object, nothing else.
+- Be faithful to the source. Never invent facts, numbers, names, commitments or positions. If
+  something isn't in the material, leave the field empty rather than guessing.
+- "sayThis" lines are short and scannable — imperative phrases, not paragraphs.
+- Put ONLY public/open-source information in "publicContext"/"publicSources"; keep it separate from
+  the internal brief.
+- Preserve exact figures and any wording that must be delivered verbatim; note "(deliver exactly)".
+- "redTeam" = questions the COUNTERPART or media might put to the Minister, each with a short basis.
+- Output ONLY the JSON object.
 
 Here is the briefing material:
 [PASTE THE FULL BRIEF HERE]
 ```
 
----
+Collect the objects into the `engagements` array (see [`AUTHORING.md`](AUTHORING.md)), add matching
+`schedule` rows, set `"isSampleData": false`, and **Import** on the device.
 
-## Why this design is safer than a live chatbot
-
-- The AI runs **once, during prep**, where a human can check every word — not live in the room.
-- The Minister only ever sees **approved** text, so there's no chance of an AI improvising a
-  wrong figure or an off-message line in front of a counterpart.
-- Nothing sensitive is sent anywhere at meeting time; the app is offline.
-
-## Tip: keep the gist short
-
-If a talking-points list comes back long, ask the AI: *"Cut these talking points to the 3 most
-important, each under 15 words."* The value of this app is the **short refresher**, not a
-re-run of the full pack.
+Tip: if the talking points come back long, ask: *"Cut sayThis to the 3 most important, each under 15
+words."* The value is the short refresher, not a re-run of the pack.

@@ -1,120 +1,81 @@
-# Authoring the briefing content
+# Authoring content (schema v2)
 
-The entire app is driven by **one JSON file**. To use real content you prepare a file in the
-same shape and load it with **Settings → Import briefing file**. You never edit the app code.
-
-Start from [`../data/schedule.sample.json`](../data/schedule.sample.json) — copy it, delete the
-sample engagements, and fill in your own.
-
----
-
-## Top-level shape
+The whole app is driven by **one JSON file**. To use real content, prepare a file in this shape
+and load it via **Settings → Import**. You never edit the app code. Start from
+[`../data/schedule.sample.json`](../data/schedule.sample.json).
 
 ```json
-{
-  "meta": { ... },
-  "engagements": [ { ... }, { ... } ]
-}
+{ "meta": { ... }, "schedule": [ ... ], "engagements": [ ... ] }
 ```
 
-### `meta`
+## `meta`
 
-| Field | Required | Notes |
-|---|---|---|
-| `schemaVersion` | yes | Keep as `1`. |
-| `isSampleData` | yes | Set to **`false`** for real data. (When `false`, the "sample data" warning banner and the demo simulated-time both switch off.) |
-| `conference` | yes | e.g. `"COP31 — UN Climate Change Conference"`. Shown in the app bar. |
-| `host` | no | e.g. `"Belém, Brazil"`. |
-| `updatedLabel` | no | Free text shown in Settings, e.g. `"Updated 15 Nov, 18:30"`. Bump it each re-sync so staff can confirm the Minister has the latest. |
-| `minister` | no | `{ "name", "title", "country", "flag" }`. `name` shows in the app bar. |
+| Field | Notes |
+|---|---|
+| `app` | App title, e.g. `"COP31 Brief Buddy"`. |
+| `schemaVersion` | `2`. |
+| `isSampleData` | **`false`** for real data (turns off the "sample" banner and demo simulated-time). |
+| `conference` | Shown in the top bar. |
+| `classification` | A label shown in the app, e.g. `"RESTRICTED"` — cosmetic, not a security control. |
+| `updatedLabel` | Free text, bump on each re-sync so staff can confirm the latest is loaded. |
+| `principal` | `{ "name", "delegation", "flag" }` — your Minister / delegation, shown in the top bar. |
 
-### `engagements[]`
+## `schedule[]` — the full day timeline
 
-One object per meeting/event. **Order doesn't matter** — the app sorts by `start` time.
+| Field | Notes |
+|---|---|
+| `time` / `end` | `"HH:MM"` (24h). |
+| `title`, `venue` | Text. |
+| `status` | `Completed` \| `Next` \| `Upcoming` (the app also recomputes from the clock). |
+| `engagementId` | The `id` of a briefed engagement, or `null` for items with no brief (lunch, huddle…). Linked items are tappable. |
 
-| Field | Required | Notes |
-|---|---|---|
-| `id` | yes | Any unique string, e.g. `"d1-04"`. Used for deep links. |
-| `day` | yes | Integer day number (`1`, `2`, `3`…). Groups the Agenda tabs. |
-| `start` | yes | Local date-time **without timezone**, `"YYYY-MM-DDTHH:MM:SS"`, e.g. `"2026-11-15T09:30:00"`. Drives "next engagement". |
-| `end` | yes | Same format. |
-| `title` | yes | Short title, e.g. `"Bilateral: Germany"`. |
-| `type` | no | One of `bilateral`, `coalition`, `roundtable`, `plenary`, `press`, `internal`, `side_event`. Controls the coloured tag. Anything else shows as "Meeting". |
-| `venue` | yes | e.g. `"Bilateral Room 4B, Blue Zone"`. |
-| `counterpart` | no | `null` for internal/press events, otherwise an object (below). |
-| `objectives` | no | Array of short strings — the key things to achieve. |
-| `talkingPoints` | no | Array of short strings — **the gist**. Keep to 3–5 punchy lines. |
-| `redLines` | no | Array — things to avoid / sensitivities. Shown in red. |
-| `desiredOutcome` | no | One line — what success looks like / the "ask". |
-| `staffContact` | no | Who to turn to for this meeting. |
+## `engagements[]` — the briefed engagements
+
+| Field | Notes |
+|---|---|
+| `id` | Unique string, e.g. `"bilat-country-a"`. Used by deep links and the schedule. |
+| `day` | Integer day number. |
+| `start` / `end` | Local date-time, no timezone: `"2026-07-16T15:15:00"`. Drives "Next". |
+| `title`, `type`, `venue` | `type`: `Bilateral` \| `Plenary` \| `Roundtable` \| `Media` \| `Coalition` \| `Internal`. |
+| `walkTime` | e.g. `"6 min walk"`. |
+| `version` | e.g. `"v4"`. |
+| `initialBriefDate` | `"YYYY-MM-DD"` — when the brief was first issued (shown in **What changed**). |
+| `currentBriefDate` | date or date-time of the current version (shown in **What changed**). |
+| `objective` | One-line goal. |
+| `tone` | Delivery tone, e.g. `"Warm, purposeful, no new concessions."` |
+| `flags` | Array of short risk chips (e.g. `"Media-sensitive"`). Words like *sensitive / avoid / no* colour them amber/red. |
+| `sayThis` | The talking points (3–5 short lines) — **the gist**. |
+| `sources` | Citations, e.g. `"brief.pdf · v4 · p.2 ¶4"`. Mapped one-per-talking-point (falls back to the last). |
+| `watchPoint` | The single most important thing to avoid. |
+| `ifAsked` | Fallback line if pressed. |
+| `changed` | Array of changes since the previous version. |
+| `redTeam` | Array of `{ "q", "basis" }` — anticipated questions + why (shown under **Ask → Anticipated questions**). |
+| `briefFile` | Optional link to the source doc (`"#"` in the sample). |
 
 ### `counterpart`
 
-| Field | Required | Notes |
-|---|---|---|
-| `name` | yes | e.g. `"Dr. Klara Böhm"`. |
-| `title` | no | e.g. `"Federal Minister for Economic Affairs & Climate Action"`. |
-| `country` | no | e.g. `"Germany"`. |
-| `flag` | no | An emoji flag, e.g. `"🇩🇪"`. Shown as a badge on the avatar and in the agenda. |
-| `profile` | no | 2–3 sentences: style, priorities, rapport — what helps in the room. |
-| `photo` | no | See below. Omit or `null` to show a coloured initials avatar (e.g. "KB") instead. |
+| Field | Notes |
+|---|---|
+| `initials`, `name`, `role`, `country`, `flag` | `initials` are the avatar fallback when there's no `photo`. `flag` is an emoji badge. |
+| `portfolio` | Their brief, e.g. `"Climate negotiations · energy transition"`. |
+| `photo` | Path/URL/`data:` URI to a portrait, or `null` to show the initials avatar. |
+| `photoNote` | Shown under the photo, e.g. `"Illustrative placeholder — not a real person"`. |
+| `publicContext` | Their public line (kept **separate** from the internal brief). |
+| `publicSources` | Array of public/open-source references. |
 
----
+## Photos, offline-safe
 
-## Adding a counterpart photo (keep it offline)
-
-To stay fully offline, **embed the photo inside the JSON** as a data URI rather than linking
-to a web address. Then the file is self-contained and no image is ever fetched from the
-internet.
-
-```json
-"photo": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...=="
-```
-
-To make a data URI from an image file:
+Reference a file (`"assets/portrait.jpg"`) or, to keep the file self-contained, embed it:
 
 ```bash
-# prints a ready-to-paste data URI (crop/resize to ~200px square first to keep it small)
-printf 'data:image/jpeg;base64,'; base64 -w0 counterpart.jpg
+printf 'data:image/jpeg;base64,'; base64 -w0 portrait.jpg   # resize to ~256px first
 ```
 
-If you leave `photo` out, the app draws a clean initials avatar with the country flag — that
-is perfectly fine and keeps files small.
+`null` → the app draws an initials avatar with the country flag. That's fine.
 
----
+## Checklist
 
-## Copy-paste template for one engagement
-
-```json
-{
-  "id": "d1-09",
-  "day": 1,
-  "start": "2026-11-15T16:30:00",
-  "end": "2026-11-15T17:15:00",
-  "title": "Bilateral: <Country>",
-  "type": "bilateral",
-  "venue": "<Room, Zone>",
-  "counterpart": {
-    "name": "<Name>",
-    "title": "<Their title>",
-    "country": "<Country>",
-    "flag": "🏳️",
-    "profile": "<Style, priorities, rapport in 2–3 sentences>",
-    "photo": null
-  },
-  "objectives": ["<Objective 1>", "<Objective 2>"],
-  "talkingPoints": ["<Point 1>", "<Point 2>", "<Point 3>"],
-  "redLines": ["<Thing to avoid>"],
-  "desiredOutcome": "<What success looks like in one line>",
-  "staffContact": "<Name / role>"
-}
-```
-
-## Checking your file before you import it
-
-- It must be **valid JSON**. Paste it into any JSON validator, or the app will tell you if it
-  can't read it.
-- Every engagement needs `id`, `day`, `start`, `end`, `title`, `venue`.
-- Times are **local to the conference** and have **no timezone suffix**.
-
-Then: **Settings → Import briefing file → pick your file.** Done.
+- Valid JSON; every engagement has `id`, `day`, `start`, `end`, `title`, `venue`.
+- `start`/`end` are local, no timezone suffix.
+- `engagementId`s in `schedule` match `engagements[].id`.
+- Then **Settings → Import**.

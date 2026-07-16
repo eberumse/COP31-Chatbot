@@ -1,13 +1,13 @@
 {
-  "name": "Minister's Briefing — COP31",
-  "short_name": "Briefing",
-  "description": "At-a-glance briefing for the Minister's next engagement. Works offline; data stays on the device.",
+  "name": "COP31 Brief Buddy",
+  "short_name": "Brief Buddy",
+  "description": "At-a-glance ministerial briefings for COP31 — next engagement, talking points, source-grounded Ask. Fictional sample data.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0f3d2e",
-  "theme_color": "#0f3d2e",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
   "icons": [
     { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

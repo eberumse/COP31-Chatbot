@@ -1,7 +1,7 @@
 /* Service worker — precache the app shell so it works fully offline.
    Bump CACHE when you change any shell file. Briefing content is stored
    separately in localStorage on the device, not in this cache. */
-var CACHE = "briefing-v1";
+var CACHE = "briefbuddy-v2";
 var SHELL = [
   ".",
   "index.html",
@@ -9,6 +9,7 @@ var SHELL = [
   "app.js",
   "manifest.webmanifest",
   "data/schedule.sample.json",
+  "assets/counterpart-minister-a.svg",
   "icons/icon.svg"
 ];
 

@@ -1,7 +1,17 @@
 # Security & privacy model
 
-This app is designed so that **sensitive briefing material never has to be uploaded anywhere** —
-not to GitHub, not to Claude, not to any server.
+> **Direction update.** The plan now assumes an **approved enterprise AI** (e.g. ChatGPT
+> Enterprise or another cleared model) will be used to summarise briefs, and that uploading to
+> **that approved, in-boundary service** is permitted up to its cleared level. That is a decision
+> for your IT/security team. What has **not** changed: (1) this public GitHub repo only ever holds
+> **code + fictional sample data** — never real briefs; (2) the **Minister app itself makes no
+> upload** — content you `Import` stays on the device; (3) the AI summarising happens once, at prep
+> time (the future **Staff console**), not live in the meeting. The offline guarantees below still
+> hold for the Minister app; the *upload* now happens only in the staff/prep pipeline, into your
+> approved AI — not through GitHub and not through this app.
+
+This app is designed so that **the Minister app never uploads anything**, and no sensitive material
+is stored in this repository.
 
 ## The core idea: separate the *code* from the *content*
 
