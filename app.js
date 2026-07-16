@@ -28,7 +28,7 @@
 
   var state = {
     data: null, isSample: true, view: "next",
-    briefId: null,
+    briefId: null, selDate: null,
     demoTime: localStorage.getItem(LS_DEMO) || "", simulated: false
   };
 
@@ -46,8 +46,11 @@
 
   function engagements(){ return (state.data&&state.data.engagements)||[]; }
   function byId(id){ return engagements().filter(function(e){return e.id===id;})[0]; }
-  function confDate(){ var e=engagements()[0]; return e? parseDT(e.start.slice(0,10)) : new Date(); }
-  function schedDate(hhmm){ var d=confDate(), p=hhmm.split(":"); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),+p[0],+p[1]); }
+  function ymd(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function hms(t){ return (t&&t.length===5)?t+":00":(t||"00:00:00"); }
+  function itemDT(it){ return new Date(it.date+"T"+hms(it.time)); }
+  function itemEnd(it){ return new Date(it.date+"T"+hms(it.end||it.time)); }
+  function scheduleDates(){ var seen={},out=[]; (state.data&&state.data.schedule||[]).forEach(function(it){ if(it.date&&!seen[it.date]){seen[it.date]=1;out.push(it.date);} }); return out.sort(); }
 
   function effectiveNow(){
     state.simulated=false;
@@ -110,8 +113,23 @@
     }).join("")+'</div>';
   }
   function watchHTML(e){
-    return '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
-      + '<div class="callout warn"><div class="blocktitle">'+ic("shield")+' If asked</div><p>'+esc(e.ifAsked)+'</p></div>';
+    return '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>';
+  }
+  function tagCls(t){ return /public/i.test(t)?"pub":(/both/i.test(t)?"both":"int"); }
+  function srcTag(t){ return '<span class="src-tag '+tagCls(t)+'">'+esc(t)+'</span>'; }
+  function anticipatedHTML(e){
+    var items=e.anticipated||[];
+    if(!items.length) return "";
+    return '<div style="margin-top:24px" class="blocktitle">'+ic("challenge")+' Anticipated questions</div>'
+      + '<p class="aq-intro">Questions beyond your brief that could come up — tailored to the counterpart and recent developments. '
+      + '<span class="src-tag int">INTERNAL</span> = your cleared brief · <span class="src-tag pub">PUBLIC</span> = indicative, from public sources.</p>'
+      + '<div class="aq-list">'+items.map(function(a){
+          return '<div class="aq"><div class="aq-q">'+esc(a.q)+'</div>'
+            + '<div class="aq-why">'+srcTag(a.whyTag||"INTERNAL")+' <span>'+esc(a.why)+'</span></div>'
+            + ((a.consider&&a.consider.length)?'<div class="aq-consider"><div class="aq-clabel">Points to consider</div>'
+                + a.consider.map(function(c){ return '<div class="aq-c">'+srcTag(c.source||"INTERNAL")+'<span>'+esc(c.text)+'</span></div>'; }).join("")+'</div>':'')
+            + '</div>';
+        }).join("")+'</div>';
   }
 
   /* ---------- NEXT ---------- */
@@ -132,17 +150,27 @@
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
       + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points</div>'+talkingHTML(e)
       + watchHTML(e)
-      + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Full brief &amp; ask</button></div>'
+      + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Open full brief</button></div>'
       + '</div></div>';
     var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
     el("next-root").innerHTML='<div class="grid-2">'+main+rail+'</div>';
   }
 
-  /* ---------- SCHEDULE ---------- */
+  /* ---------- SCHEDULE (week calendar) ---------- */
   function renderSchedule(){
-    var now=effectiveNow(), sch=state.data.schedule||[], nextId=(nextEngagement().hero||{}).id;
-    var rows=sch.map(function(it){
-      var s=schedDate(it.time), en=schedDate(it.end||it.time), link=!!it.engagementId;
+    var now=effectiveNow(), dates=scheduleDates(), todayStr=ymd(now);
+    if(!state.selDate || dates.indexOf(state.selDate)<0) state.selDate = dates.indexOf(todayStr)>=0?todayStr:(dates[0]||todayStr);
+    var nextId=(nextEngagement().hero||{}).id;
+    var strip=dates.map(function(d){
+      var dt=parseDT(d), count=(state.data.schedule||[]).filter(function(x){return x.date===d;}).length;
+      var briefed=(state.data.schedule||[]).some(function(x){return x.date===d && x.engagementId;});
+      return '<button class="day-chip'+(d===state.selDate?" sel":"")+(d===todayStr?" today":"")+'" data-day="'+esc(d)+'">'
+        + '<span class="dc-dow">'+DOW[dt.getDay()]+'</span><span class="dc-num">'+dt.getDate()+'</span><span class="dc-mon">'+MON[dt.getMonth()]+'</span>'
+        + '<span class="dc-meta">'+(count?count+(count===1?" item":" items"):"—")+(briefed?' <b>•</b>':'')+'</span></button>';
+    }).join("");
+    var items=(state.data.schedule||[]).filter(function(x){return x.date===state.selDate;}).sort(function(a,b){return itemDT(a)-itemDT(b);});
+    var rows=items.map(function(it){
+      var s=itemDT(it), en=itemEnd(it), link=!!it.engagementId;
       var isNow=s<=now&&now<en, isDone=en<now&&!isNow, isNext=it.engagementId&&it.engagementId===nextId&&!isNow;
       var tag=isNow?'<span class="tag next">Now</span>':isNext?'<span class="tag next">Next</span>':isDone?'<span class="tag completed">Done</span>':'<span class="tag upcoming">Upcoming</span>';
       var sub=link?'<span class="tag">'+esc(engType(it.engagementId))+'</span>'+esc(it.venue):esc(it.venue);
@@ -151,13 +179,15 @@
         + '<div><div class="tl-title">'+esc(it.title)+'</div><div class="tl-sub">'+sub+'</div></div>'
         + '<div>'+tag+(link?'<span class="tl-chev">'+ic("chevron")+'</span>':'')+'</div>'
         + '</'+(link?'button':'div')+'>';
-    }).join("");
-    el("schedule-root").innerHTML='<div class="section-h"><h2>'+esc(fmtDay(confDate()))+'</h2><span class="hint">Tap a briefed item for the full brief</span></div><div class="timeline">'+rows+'</div>';
+    }).join("") || '<div class="empty-day">Nothing scheduled for this day.</div>';
+    el("schedule-root").innerHTML='<div class="field-label">This week <span class="wk-legend">• = has a full brief</span></div><div class="week-strip">'+strip+'</div>'
+      + '<div class="section-h"><h2>'+esc(fmtDay(parseDT(state.selDate)))+'</h2><span class="hint">Tap a briefed item for the full brief</span></div>'
+      + '<div class="timeline">'+rows+'</div>';
   }
   function engType(id){ var e=byId(id); return e?e.type:""; }
 
   /* ---------- BRIEFS (merged: read + ask) ---------- */
-  var SUGGEST = ["Give me the 20-second version", "What must I avoid?", "Can we commit new finance?"];
+  var SUGGEST = ["Give me the 20-second version", "Which country is blocking the deal?", "What must I avoid?"];
   function renderBriefs(){
     var e=byId(state.briefId)||engagements()[0];
     if(!e){ el("briefs-root").innerHTML='<div class="panel card-pad">No briefs loaded.</div>'; return; }
@@ -174,9 +204,9 @@
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
       + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
       + watchHTML(e)
-      + '<div style="margin-top:24px" class="blocktitle">'+ic("challenge")+' Anticipated questions</div>'
-      + '<div class="qa-list">'+(e.redTeam||[]).map(function(x){return '<div class="qa"><strong>'+esc(x.q)+'</strong><span>Basis: '+esc(x.basis)+'</span></div>';}).join("")+'</div>'
+      + anticipatedHTML(e)
       + '<div class="ask-block"><div style="margin-top:24px" class="blocktitle">'+ic("chat")+' Ask about this brief</div>'
+      + '<p class="aq-intro">Answers come from your cleared brief first; only if it’s not covered will a tentative public note appear.</p>'
       + '<div class="chip-row">'+chips+'</div>'
       + '<div class="ask-box"><input class="ask-input" id="askInput" placeholder="Ask anything about this brief…"><button class="ask-send" id="askSend">Ask</button></div>'
       + '<div id="answer-slot"></div></div>'
@@ -186,13 +216,32 @@
   }
   function answer(q){
     var e=byId(state.briefId)||engagements()[0]; if(!e) return;
-    var lower=(q||"").toLowerCase(), cls="", tag="", body="";
-    if(/avoid|watch|risk|careful|red.?line|sensitiv/.test(lower)){ tag=ic("alert")+" Watch point"; body='<p><strong>'+esc(e.watchPoint)+'</strong></p><p>If pressed: '+esc(e.ifAsked)+'</p>'; }
-    else if(/commit|concession|promise|new (finance|money|fund)|number|figure|guarantee/.test(lower)){ cls="unsupported"; tag=ic("alert")+" Not in the approved pack"; body='<p><strong>That isn’t covered by the approved brief.</strong></p><p>The pack offers no line beyond: “'+esc(e.ifAsked)+'”. Brief Buddy will not invent a new commitment or position — check with your negotiators.</p>'; }
-    else { tag=ic("spark")+" In short"; body='<ul>'+(e.sayThis||[]).map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p style="margin-top:10px" class="basis">Tone: '+esc(e.tone)+'</p>'; }
-    var srcs='<div class="src-row" style="margin-top:14px">'+(e.sources||[]).map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>';
+    var lower=(q||"").toLowerCase().trim(); if(!lower) return;
+    var cls="", tag="", body="", srcs="";
+    // 1) Brief-first: watch point / commitments / numbers -> cleared guardrail
+    if(/avoid|watch|risk|careful|red.?line|sensitiv|commit|concession|promise|new (finance|money|fund)|pledge|guarantee|how much|number|figure|announce/.test(lower)){
+      tag=srcTag("INTERNAL")+' From your brief';
+      body='<p><strong>Watch point:</strong> '+esc(e.watchPoint)+'</p>'+(e.ifAsked?'<p>If pressed, you can say: '+esc(e.ifAsked)+'</p>':'');
+      srcs=briefSrcRow(e);
+    }
+    // 2) Brief-first: summary / talking points / objective
+    else if(/summar|gist|20.?sec|short|main point|talking point|what.*(say|convey|tell)|objective|aim|goal|key point/.test(lower)){
+      tag=srcTag("INTERNAL")+' From your brief';
+      body='<p>'+esc(e.objective)+'</p><ul>'+(e.sayThis||[]).map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p class="basis" style="margin-top:8px">Tone: '+esc(e.tone)+'</p>';
+      srcs=briefSrcRow(e);
+    }
+    else {
+      // 3) Out of brief -> tentative public, else not covered
+      var pi=(e.publicInfo||[]).filter(function(p){ return (p.keywords||[]).some(function(k){ return lower.indexOf(k)>=0; }); })[0];
+      if(pi){ cls="public"; tag=srcTag("PUBLIC")+' Public domain · indicative';
+        body='<p><em>Not in your cleared brief.</em> Publicly — and to be treated as indicative only — '+esc(pi.text)+'</p><p class="basis" style="margin-top:8px">Tentative; verify before use and lean on your cleared brief and negotiators.</p>';
+      } else { cls="none"; tag=srcTag("INTERNAL")+' Not in your cleared brief';
+        body='<p>Your cleared brief doesn’t cover that, and there’s nothing reliable in the loaded public notes.</p><p class="basis" style="margin-top:8px">Check with your negotiators. (In production, your enterprise AI would attempt a fuller, sourced answer here.)</p>';
+      }
+    }
     var slot=el("answer-slot"); if(slot) slot.innerHTML='<div class="answer '+cls+'"><span class="atag">'+tag+'</span>'+body+srcs+'</div>';
   }
+  function briefSrcRow(e){ return '<div class="src-row" style="margin-top:14px">'+(e.sources||[]).map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>'; }
 
   /* ---------- SETTINGS ---------- */
   function renderSettings(){
@@ -237,6 +286,7 @@
   document.addEventListener("click", function(ev){
     var t=ev.target;
     var tab=t.closest("[data-tab]"); if(tab){ go(tab.dataset.tab); return; }
+    var dc=t.closest("[data-day]"); if(dc){ state.selDate=dc.dataset.day; renderSchedule(); return; }
     var ob=t.closest("[data-openbrief]"); if(ob){ state.briefId=ob.dataset.openbrief; go("briefs"); return; }
     var sg=t.closest("[data-ask]"); if(sg){ var qi=el("askInput"); if(qi) qi.value=sg.dataset.ask; answer(sg.dataset.ask); return; }
     var id=(t.closest("button")||{}).id;

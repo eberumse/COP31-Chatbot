@@ -17,8 +17,8 @@ testing (Singapore delegation, anonymised "Minister A", an illustrative avatar).
 | Tab | What it does |
 |---|---|
 | **Next** | The immediate engagement as a glanceable hero: countdown, venue, **risk flags**, objective, **Main Talking Points with source citations**, **watch point**, **"if asked"** line, and a counterpart card (illustrated avatar, portfolio, factual **public background**). |
-| **Schedule** | The full day's timeline; the current/next item is flagged, briefed items open their brief. |
-| **Briefs** | Pick **any** engagement (via **Choose a meeting**), read its full source-grounded brief once — objective, Main Talking Points, watch point, **anticipated questions**, counterpart — then **ask about it** in a free-text box (source-grounded, with a **"not in the approved pack, won't invent"** guardrail). Reading + asking are merged here. |
+| **Schedule** | A **week calendar** — a tappable day strip (with item counts + a dot for days that have a full brief); tap a day to see its agenda. The current/next item is flagged; briefed items open their brief. |
+| **Briefs** | Pick **any** engagement (via **Choose a meeting**), read its full brief once — objective, Main Talking Points, watch point, **anticipated questions** (tailored to the counterpart + developments, each tagged **INTERNAL**/cleared vs **PUBLIC**/indicative), counterpart — then **ask about it** in a free-text box. Answers come **from the cleared brief first**; only if it's not covered does a clearly-labelled, **tentative public-domain** note appear (in production this calls your enterprise AI). |
 | **Settings** | Import/export content, simulate a time, install info. |
 
 Deep links for testing: `#next`, `#schedule`, `#briefs`, `#settings`, `#e/<id>`.

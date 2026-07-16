@@ -32,7 +32,12 @@ you. Return ONE JSON object in EXACTLY this shape (COP31 Brief Buddy, schema v2)
   "sources": [],                  // one citation per talking point, e.g. "brief.pdf · v4 · p.2 ¶4"
   "watchPoint": "",               // the single most important thing to AVOID
   "ifAsked": "",                  // fallback line if pressed
-  "redTeam": [ { "q": "", "basis": "" } ]   // likely/hostile questions + why
+  "anticipated": [                // questions BEYOND the brief that could come up
+    { "q": "", "why": "",         // why it may arise — tie to the counterpart profile + developments
+      "whyTag": "BOTH",           // PUBLIC | INTERNAL | BOTH
+      "consider": [ { "text": "", "source": "INTERNAL" } ] }  // points to consider; source: PUBLIC | INTERNAL
+  ],
+  "publicInfo": [ { "keywords": [], "text": "" } ]  // indicative public snippets for the Ask fallback (tentative)
 }
 
 Rules:
@@ -42,7 +47,11 @@ Rules:
 - "publicBackground" holds ONLY neutral, factual public info (open sources) — do NOT characterise
   their negotiating stance. Keep it separate from the internal brief.
 - Preserve exact figures and any wording that must be delivered verbatim; note "(deliver exactly)".
-- "redTeam" = questions the COUNTERPART or media might put to the Minister, each with a short basis.
+- "anticipated" = questions BEYOND the brief the counterpart/media might raise; for each, explain why
+  (tie to the counterpart's profile + recent developments) and give "points to consider" (not cleared
+  one-liners). Tag every element PUBLIC (indicative/open sources) or INTERNAL (cleared brief).
+- "publicInfo" holds only indicative, clearly-tentative public snippets, used when a question isn't
+  answered by the brief. Never state public info as fact.
 - Output ONLY the JSON object.
 
 Here is the briefing material:
