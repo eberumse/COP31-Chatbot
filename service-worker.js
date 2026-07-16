@@ -1,7 +1,6 @@
-/* Service worker — precache the app shell so it works fully offline.
-   Bump CACHE when you change any shell file. Briefing content is stored
-   separately in localStorage on the device, not in this cache. */
-var CACHE = "briefbuddy-v2";
+/* Service worker — NETWORK-FIRST so new deploys show up immediately when online,
+   with a cached copy as offline fallback. Bump CACHE on each shell change. */
+var CACHE = "briefbuddy-v3";
 var SHELL = [
   ".",
   "index.html",
@@ -16,7 +15,6 @@ var SHELL = [
 self.addEventListener("install", function (e) {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(function (c) {
-    // Add individually so one missing optional asset (e.g. a PNG) can't fail the whole install.
     return Promise.all(SHELL.map(function (u) {
       return c.add(new Request(u, { cache: "no-cache" })).catch(function () {});
     }));
@@ -32,21 +30,17 @@ self.addEventListener("activate", function (e) {
 self.addEventListener("fetch", function (e) {
   var req = e.request;
   if (req.method !== "GET") return;
-  // Network-first for the sample data (so edits show up), cache fallback offline.
-  if (req.url.indexOf("schedule.sample.json") > -1) {
-    e.respondWith(fetch(req).then(function (r) {
-      var copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); });
-      return r;
-    }).catch(function () { return caches.match(req); }));
-    return;
-  }
-  // Cache-first for everything else in the shell.
-  e.respondWith(caches.match(req).then(function (hit) {
-    return hit || fetch(req).then(function (r) {
-      if (r && r.status === 200 && r.type === "basic") {
-        var copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); });
+  if (new URL(req.url).origin !== self.location.origin) return; // let cross-origin pass through
+  // Network-first: always try the network, cache the fresh copy, fall back to cache offline.
+  e.respondWith(
+    fetch(req).then(function (r) {
+      if (r && r.status === 200) {
+        var copy = r.clone();
+        caches.open(CACHE).then(function (c) { c.put(req, copy); });
       }
       return r;
-    }).catch(function () { return caches.match("index.html"); });
-  }));
+    }).catch(function () {
+      return caches.match(req).then(function (hit) { return hit || caches.match("index.html"); });
+    })
+  );
 });

@@ -22,6 +22,7 @@
     alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2.8 20h18.4L12 3Z"/><path d="M12 9.5v5M12 17.5h.01"/></svg>',
     challenge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14 14 4l6 6-10 10H4v-6Z"/><path d="M13 5l6 6"/></svg>',
     web:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+    globe2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4.2" ry="9"/><path d="M3.2 9h17.6M3.2 15h17.6"/></svg>',
     arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg>',
     check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12.5 4.5 4.5L19 6.5"/></svg>',
@@ -309,7 +310,11 @@
   window.addEventListener("online", updateChrome); window.addEventListener("offline", updateChrome);
   setInterval(function(){ var c=el("liveClock"); if(c) c.textContent=fmtClock(new Date()); if(state.view==="next"&&!state.demoTime) renderNext(); }, 30000);
 
-  if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("service-worker.js").catch(function(){}); }); }
+  if("serviceWorker" in navigator){
+    var _hadCtrl = !!navigator.serviceWorker.controller, _reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function(){ if(_reloading || !_hadCtrl) return; _reloading = true; location.reload(); });
+    window.addEventListener("load", function(){ navigator.serviceWorker.register("service-worker.js").catch(function(){}); });
+  }
 
   /* ---------- boot ---------- */
   function setupIcons(){ document.querySelectorAll("[data-icon]").forEach(function(n){ n.innerHTML=ic(n.dataset.icon); }); }
