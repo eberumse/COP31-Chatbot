@@ -5,38 +5,8 @@
    ============================================================ */
 
 /* ---------- Design tokens ---------- */
+/* Dark theme only. */
 :root {
-  --bg:        #eef1f6;
-  --bg-grad:   radial-gradient(1200px 500px at 15% -10%, rgba(15,118,110,.06), transparent 60%),
-               radial-gradient(1000px 460px at 100% 0%, rgba(37,99,235,.06), transparent 55%);
-  --panel:     #ffffff;
-  --panel-2:   #f7f9fc;
-  --inset:     #f1f4f9;
-  --line:      rgba(15,23,42,.10);
-  --line-2:    rgba(15,23,42,.16);
-  --text:      #0f1b2d;
-  --muted:     #566579;
-  --faint:     #8695a8;
-  --accent:    #0f766e;   /* teal 700 */
-  --accent-2:  #4f46e5;   /* indigo */
-  --accent-soft:#e6f4f2;
-  --accent-ink:#0b544e;
-  --warn:      #b45309;
-  --warn-soft: #fdf1e3;
-  --danger:    #be123c;
-  --danger-soft:#fdecef;
-  --ok:        #047857;
-  --ok-soft:   #e7f4ee;
-  --shadow:    0 1px 2px rgba(16,32,55,.05), 0 12px 34px rgba(16,32,55,.08);
-  --shadow-sm: 0 1px 2px rgba(16,32,55,.06);
-  --r-xl: 22px; --r-lg: 18px; --r-md: 14px; --r-sm: 10px;
-  --safe-b: env(safe-area-inset-bottom, 0px);
-  --safe-t: env(safe-area-inset-top, 0px);
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Helvetica Neue", sans-serif;
-  --nav-w: 88px;
-}
-
-[data-theme="dark"] {
   --bg:        #0b1220;
   --bg-grad:   radial-gradient(1100px 520px at 12% -12%, rgba(56,189,248,.12), transparent 56%),
                radial-gradient(1000px 480px at 100% -6%, rgba(129,140,248,.12), transparent 52%),
@@ -61,6 +31,11 @@
   --ok-soft:   rgba(52,211,153,.12);
   --shadow:    0 1px 2px rgba(0,0,0,.3), 0 24px 60px rgba(0,0,0,.42);
   --shadow-sm: 0 1px 2px rgba(0,0,0,.34);
+  --r-xl: 22px; --r-lg: 18px; --r-md: 14px; --r-sm: 10px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Helvetica Neue", sans-serif;
+  --nav-w: 88px;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -104,7 +79,6 @@ svg { width: 20px; height: 20px; display: block; }
 .nav-btn em { font-style: normal; }
 .nav-btn:hover { color: var(--text); background: color-mix(in srgb, var(--muted) 12%, transparent); }
 .nav-btn.active { color: var(--accent-ink); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 32%, transparent); }
-.theme-toggle { width: 48px; }
 
 /* ---------- Main ---------- */
 .main { min-width: 0; padding: calc(20px + var(--safe-t)) clamp(16px, 3.4vw, 40px) 60px; max-width: 1180px; }
@@ -294,6 +268,11 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
 .ask-input { flex: 1; min-width: 0; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--panel); color: var(--text); outline: none; box-shadow: var(--shadow-sm); }
 .ask-input:focus { border-color: color-mix(in srgb, var(--accent) 50%, var(--line-2)); }
 .ask-send { padding: 12px 16px; border-radius: var(--r-md); border: 0; color: #fff; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.brief-select { margin-bottom: 16px; }
+.ask-block { margin-top: 4px; }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.suggest { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); background: var(--panel); font-size: 12.5px; font-weight: 600; transition: 120ms ease; }
+.suggest:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 40%, var(--line-2)); }
 .answer {
   margin-top: 16px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
   background: var(--accent-soft); padding: 18px; min-height: 200px;
@@ -334,7 +313,7 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
   .topbar-side .pill.clock { display: none; }
   .mobilenav {
     position: fixed; left: 10px; right: 10px; bottom: calc(8px + var(--safe-b)); z-index: 40;
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 7px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 7px;
     border: 1px solid var(--line); border-radius: 20px; background: color-mix(in srgb, var(--panel) 92%, transparent);
     backdrop-filter: blur(20px); box-shadow: var(--shadow);
   }

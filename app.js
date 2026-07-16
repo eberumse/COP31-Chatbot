@@ -1,40 +1,34 @@
 /* ============================================================
    COP31 Brief Buddy — app logic (vanilla JS, no dependencies)
+   Dark theme only. Tabs: Next · Schedule · Briefs · Settings.
    ============================================================ */
 (function () {
   "use strict";
 
-  var LS_DATA = "bb:data", LS_THEME = "bb:theme", LS_DEMO = "bb:demoTime";
+  var LS_DATA = "bb:data", LS_DEMO = "bb:demoTime";
 
   var ICONS = {
-    spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l1.7 6.1L20 10l-6.3 1.9L12 18l-1.7-6.1L4 10l6.3-1.9L12 2Z"/></svg>',
     target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
     calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 9.5h18"/></svg>',
     doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7.5 3.5h7l4 4V20A1.5 1.5 0 0 1 17 21.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7.5 3.5Z"/><path d="M14.5 3.5V8h4M9 12.5h6M9 16h6"/></svg>',
     chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.4A8.5 8.5 0 1 1 21 12Z"/><path d="M9.2 9.4a3 3 0 0 1 5.5 1.5c0 2.1-2.7 2.3-2.7 4M12 18h.01"/></svg>',
     gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 6.1 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 4.5 13H4.3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 6 6.1l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 11 4.5V4.3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 17.9 6l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 2.1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>',
-    sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></svg>',
-    moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"/></svg>',
     pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
     clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>',
-    walk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="13" cy="4.5" r="1.6"/><path d="M11 22l1.5-6-2.5-2 1-5 3 2 2 1M8.5 22l2-5"/></svg>',
     shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v5c0 4.5 2.8 8.4 7 10 4.2-1.6 7-5.5 7-10V6l-7-3Z"/><path d="m9.5 12 1.7 1.7 3.5-4"/></svg>',
     alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2.8 20h18.4L12 3Z"/><path d="M12 9.5v5M12 17.5h.01"/></svg>',
     challenge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14 14 4l6 6-10 10H4v-6Z"/><path d="M13 5l6 6"/></svg>',
     web:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
-    globe2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4.2" ry="9"/><path d="M3.2 9h17.6M3.2 15h17.6"/></svg>',
-    arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg>',
-    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12.5 4.5 4.5L19 6.5"/></svg>',
     upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5"/><path d="M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg>',
     download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5"/><path d="M5 18.5h14"/></svg>',
     refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 1 0-.8 4.5"/><path d="M20 4v6h-6"/></svg>',
-    spark2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/></svg>'
+    spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/></svg>'
   };
 
   var state = {
     data: null, isSample: true, view: "next",
-    briefId: null, askId: null, askMode: "brief",
+    briefId: null,
     demoTime: localStorage.getItem(LS_DEMO) || "", simulated: false
   };
 
@@ -53,7 +47,7 @@
   function engagements(){ return (state.data&&state.data.engagements)||[]; }
   function byId(id){ return engagements().filter(function(e){return e.id===id;})[0]; }
   function confDate(){ var e=engagements()[0]; return e? parseDT(e.start.slice(0,10)) : new Date(); }
-  function schedDate(hhmm){ var d=confDate(), p=hhmm.split(":"); var x=new Date(d.getFullYear(),d.getMonth(),d.getDate(),+p[0],+p[1]); return x; }
+  function schedDate(hhmm){ var d=confDate(), p=hhmm.split(":"); return new Date(d.getFullYear(),d.getMonth(),d.getDate(),+p[0],+p[1]); }
 
   function effectiveNow(){
     state.simulated=false;
@@ -92,23 +86,7 @@
       state.data=normalize(d); state.isSample=!(d.meta&&d.meta.isSampleData===false); afterLoad();
     }).catch(function(){ state.data={meta:{},engagements:[],schedule:[]}; afterLoad(); });
   }
-  function afterLoad(){ var n=nextEngagement(); var f=n.hero||engagements()[0]; state.briefId=f?f.id:null; state.askId=f?f.id:null; }
-
-  /* ---------- theme ---------- */
-  function currentTheme(){ return document.documentElement.getAttribute("data-theme")||"light"; }
-  function applyTheme(mode){
-    var t=mode;
-    if(mode==="system"){ localStorage.removeItem(LS_THEME); t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"; }
-    else localStorage.setItem(LS_THEME, mode);
-    document.documentElement.setAttribute("data-theme", t);
-    updateThemeIcons();
-    if(state.view==="settings") renderSettings();
-  }
-  function toggleTheme(){ applyTheme(currentTheme()==="dark"?"light":"dark"); }
-  function updateThemeIcons(){
-    var name=currentTheme()==="dark"?"sun":"moon";
-    ["themeBtn","themeBtnTop"].forEach(function(id){ var b=el(id); if(b) b.querySelector("[data-icon]").innerHTML=ic(name); });
-  }
+  function afterLoad(){ var f=nextEngagement().hero||engagements()[0]; state.briefId=f?f.id:null; }
 
   /* ---------- shared brief pieces ---------- */
   function counterpartHTML(e){
@@ -125,12 +103,17 @@
       + '</div>';
   }
   function talkingHTML(e){
-    return '<div class="talk-list">'+e.sayThis.map(function(line,i){
+    return '<div class="talk-list">'+(e.sayThis||[]).map(function(line,i){
       var s=e.sources&&e.sources.length?e.sources[Math.min(i,e.sources.length-1)]:null;
       return '<div class="talk"><div class="talk-n">'+(i+1)+'</div><div><div class="talk-c">'+esc(line)+'</div>'
         + (s?'<div class="src-row"><span class="src">'+esc(s)+'</span></div>':'')+'</div></div>';
     }).join("")+'</div>';
   }
+  function watchHTML(e){
+    return '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
+      + '<div class="callout warn"><div class="blocktitle">'+ic("shield")+' If asked</div><p>'+esc(e.ifAsked)+'</p></div>';
+  }
+
   /* ---------- NEXT ---------- */
   function renderNext(){
     var n=nextEngagement(), e=n.hero;
@@ -148,14 +131,10 @@
       + (flags?'<div class="flag-row">'+flags+'</div>':'')
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
       + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points</div>'+talkingHTML(e)
-      + '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
-      + '<div class="callout warn"><div class="blocktitle">'+ic("shield")+' If asked</div><p>'+esc(e.ifAsked)+'</p></div>'
-      + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Full brief</button>'
-      + '<button class="btn" data-goask="'+esc(e.id)+'">'+ic("challenge")+' Prep likely questions</button></div>'
+      + watchHTML(e)
+      + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Full brief &amp; ask</button></div>'
       + '</div></div>';
-
     var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
-
     el("next-root").innerHTML='<div class="grid-2">'+main+rail+'</div>';
   }
 
@@ -177,89 +156,58 @@
   }
   function engType(id){ var e=byId(id); return e?e.type:""; }
 
-  /* ---------- BRIEFS ---------- */
+  /* ---------- BRIEFS (merged: read + ask) ---------- */
+  var SUGGEST = ["Give me the 20-second version", "What must I avoid?", "Can we commit new finance?"];
   function renderBriefs(){
-    var list=engagements().map(function(e){
-      return '<button class="pick'+(e.id===state.briefId?' active':'')+'" data-pick="'+esc(e.id)+'"><div class="row"><span class="t">'+esc(e.title)+'</span><span class="tag">'+esc(e.type)+'</span></div>'
-        + '<div class="m">'+esc(e.counterpart.name)+' · updated '+esc(fmtDate(e.currentBriefDate))+' · '+esc(e.version)+'</div></button>';
-    }).join("");
     var e=byId(state.briefId)||engagements()[0];
-    var detail=e ? briefDetailHTML(e) : '<div class="panel card-pad">No brief selected.</div>';
-    el("briefs-root").innerHTML='<div class="split"><div><div class="field-label">Briefs</div><div class="pick-list">'+list+'</div></div><div>'+detail+'</div></div>';
-  }
-  function briefDetailHTML(e){
+    if(!e){ el("briefs-root").innerHTML='<div class="panel card-pad">No briefs loaded.</div>'; return; }
     var start=new Date(e.start);
-    return '<div class="rail">'
-      + '<div class="panel card-pad">'
-      + '<span class="ai-tag">'+ic("spark2")+' AI-generated · source-grounded</span>'
+    var opts=engagements().map(function(x){ return '<option value="'+esc(x.id)+'"'+(x.id===e.id?" selected":"")+'>'+esc(x.title)+' — '+esc(x.type)+'</option>'; }).join("");
+    var selector='<div class="panel card-pad brief-select"><div class="field-label">Choose a meeting</div><select class="select" id="briefSelect">'+opts+'</select></div>';
+
+    var chips=SUGGEST.map(function(q){ return '<button class="suggest" data-ask="'+esc(q)+'">'+esc(q)+'</button>'; }).join("");
+    var main='<div class="panel card-pad">'
+      + '<span class="ai-tag">'+ic("spark")+' AI-generated · source-grounded</span>'
       + '<div class="detail-title">'+esc(e.title)+'</div>'
       + '<div class="meta-strip"><span class="meta-item">'+ic("clock")+esc(fmtClock(start))+'–'+esc(fmtClock(new Date(e.end)))+'</span><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span><span class="type-chip">'+esc(e.type)+'</span></div>'
       + (e.updated?'<div class="updated-line">Updated '+esc(fmtDate(e.updated))+'</div>':'')
-      + '<div class="objective"><div class="blocktitle">'+ic("target")+' One-line objective</div><p>'+esc(e.objective)+'</p></div>'
-      + '<div style="margin-top:20px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
-      + '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
-      + '<div class="btn-row"><button class="btn primary" data-goask="'+esc(e.id)+'">'+ic("chat")+' Ask about this brief</button></div>'
-      + '</div>'
-      + counterpartHTML(e)
+      + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
+      + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
+      + watchHTML(e)
+      + '<div style="margin-top:24px" class="blocktitle">'+ic("challenge")+' Anticipated questions</div>'
+      + '<div class="qa-list">'+(e.redTeam||[]).map(function(x){return '<div class="qa"><strong>'+esc(x.q)+'</strong><span>Basis: '+esc(x.basis)+'</span></div>';}).join("")+'</div>'
+      + '<div class="ask-block"><div style="margin-top:24px" class="blocktitle">'+ic("chat")+' Ask about this brief</div>'
+      + '<div class="chip-row">'+chips+'</div>'
+      + '<div class="ask-box"><input class="ask-input" id="askInput" placeholder="Ask anything about this brief…"><button class="ask-send" id="askSend">Ask</button></div>'
+      + '<div id="answer-slot"></div></div>'
       + '</div>';
+    var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
+    el("briefs-root").innerHTML=selector+'<div class="grid-2">'+main+rail+'</div>';
   }
-
-  /* ---------- ASK ---------- */
-  var MODES=[
-    {k:"brief", label:"Main talking points"},
-    {k:"redteam", label:"Anticipated questions"},
-    {k:"watch", label:"Watch point"}
-  ];
-  function renderAsk(){
-    var opts=engagements().map(function(e){ return '<option value="'+esc(e.id)+'"'+(e.id===state.askId?" selected":"")+'>'+esc(e.title)+' — '+esc(e.type)+'</option>'; }).join("");
-    var modes=MODES.map(function(m){ return '<button class="mode'+(m.k===state.askMode?' active':'')+'" data-mode="'+m.k+'">'+esc(m.label)+'</button>'; }).join("");
-    var left='<div class="panel card-pad">'
-      + '<div class="field-label">Choose a meeting</div><select class="select" id="askSelect">'+opts+'</select>'
-      + '<div class="explain"><b>Red-team</b> surfaces questions your counterpart is likely to put to <i>you</i>. <b>Ask</b> looks up anything inside this approved brief — you always get a source-grounded answer, or a clear “not in the pack”.</div>'
-      + '<div class="field-label" style="margin-top:16px">Quick modes</div><div class="mode-row">'+modes+'</div>'
-      + '<div class="ask-box"><input class="ask-input" id="askInput" placeholder="Ask about this brief…"><button class="ask-send" id="askSend">Ask</button></div>'
-      + '</div>';
-    el("ask-root").innerHTML='<div class="ask-wrap">'+left+'<div id="answer-slot"></div></div>';
-    answer(state.askMode);
-  }
-  function answer(mode, q){
-    var e=byId(state.askId)||engagements()[0]; if(!e){ return; }
-    var cls="", tag="", body="";
-    var lower=(q||"").toLowerCase();
-    if(q){
-      if(/anticipat|red.?team|challeng|question|hostile/.test(lower)) mode="redteam";
-      else if(/avoid|watch|risk|careful/.test(lower)) mode="watch";
-      else if(/commit|concession|promise|new (finance|money|fund)|number|figure|guarantee/.test(lower)) mode="unsupported";
-      else mode="brief";
-    }
-    if(mode==="redteam"){ tag=ic("challenge")+" Anticipated questions"; body='<div class="qa-list">'+e.redTeam.map(function(x){return '<div class="qa"><strong>'+esc(x.q)+'</strong><span>Basis: '+esc(x.basis)+'</span></div>';}).join("")+'</div><p style="margin-top:12px" class="basis">These are questions the counterpart or media may put to the Minister — the answer should still come from the approved brief.</p>'; }
-    else if(mode==="watch"){ tag=ic("alert")+" Watch point"; body='<p><strong>'+esc(e.watchPoint)+'</strong></p><p>If pressed: '+esc(e.ifAsked)+'</p>'; }
-    else if(mode==="unsupported"){ cls="unsupported"; tag=ic("alert")+" Not in the approved pack"; body='<p><strong>That isn’t covered by the approved brief.</strong></p><p>The pack offers no line beyond: “'+esc(e.ifAsked)+'”. Brief Buddy will not invent a new commitment or position — check with your negotiators.</p>'; }
-    else { tag=ic("spark2")+" Main talking points"; body='<ul>'+e.sayThis.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p style="margin-top:10px" class="basis">Tone: '+esc(e.tone)+'</p>'; }
-
-    var srcs='<div class="src-row" style="margin-top:14px">'+e.sources.map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>';
+  function answer(q){
+    var e=byId(state.briefId)||engagements()[0]; if(!e) return;
+    var lower=(q||"").toLowerCase(), cls="", tag="", body="";
+    if(/avoid|watch|risk|careful|red.?line|sensitiv/.test(lower)){ tag=ic("alert")+" Watch point"; body='<p><strong>'+esc(e.watchPoint)+'</strong></p><p>If pressed: '+esc(e.ifAsked)+'</p>'; }
+    else if(/commit|concession|promise|new (finance|money|fund)|number|figure|guarantee/.test(lower)){ cls="unsupported"; tag=ic("alert")+" Not in the approved pack"; body='<p><strong>That isn’t covered by the approved brief.</strong></p><p>The pack offers no line beyond: “'+esc(e.ifAsked)+'”. Brief Buddy will not invent a new commitment or position — check with your negotiators.</p>'; }
+    else { tag=ic("spark")+" In short"; body='<ul>'+(e.sayThis||[]).map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p style="margin-top:10px" class="basis">Tone: '+esc(e.tone)+'</p>'; }
+    var srcs='<div class="src-row" style="margin-top:14px">'+(e.sources||[]).map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>';
     var slot=el("answer-slot"); if(slot) slot.innerHTML='<div class="answer '+cls+'"><span class="atag">'+tag+'</span>'+body+srcs+'</div>';
-    if(!q){ state.askMode=mode; document.querySelectorAll(".mode").forEach(function(b){ b.classList.toggle("active", b.dataset.mode===mode); }); }
   }
 
   /* ---------- SETTINGS ---------- */
   function renderSettings(){
     var m=(state.data&&state.data.meta)||{}, count=engagements().length;
-    var stored=localStorage.getItem(LS_THEME); var themeMode=stored||"system";
     var standalone=window.navigator.standalone||matchMedia("(display-mode: standalone)").matches;
     var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    function seg(v,l){ return '<button class="'+(themeMode===v?"on":"")+'" data-settheme="'+v+'">'+l+'</button>'; }
     el("settings-root").innerHTML='<div class="set-grid">'
-      + '<div class="panel card-pad set-card"><h3>Appearance</h3><p>Switch the look. Light suits a bright plenary hall; dark suits the console feel.</p>'
-      + '<div class="seg">'+seg("light","Light")+seg("dark","Dark")+seg("system","System")+'</div></div>'
       + '<div class="panel card-pad set-card"><h3>Add to Home Screen</h3>'+(standalone?'<p>✅ Installed — running as an app.</p>':isIOS?'<p>In Safari: <b>Share</b> → <b>Add to Home Screen</b>. Then it opens like an app.</p>':'<p>Use the browser menu → <b>Install app</b> / <b>Add to Home Screen</b>.</p>')+'</div>'
       + '<div class="panel card-pad set-card"><h3>Briefing content</h3><p class="kv"><b>Source:</b> '+(state.isSample?"Sample data (built in)":"Imported file")+'<br><b>Engagements:</b> '+count+(m.updatedLabel?'<br><b>Updated:</b> '+esc(m.updatedLabel):"")+'</p>'
       + '<div class="btn-row"><button class="btn primary" id="btnImport">'+ic("upload")+' Import file</button><button class="btn" id="btnExport">'+ic("download")+' Export</button>'+(state.isSample?"":'<button class="btn ghost" id="btnReset">'+ic("refresh")+' Reset to sample</button>')+'</div></div>'
       + '<div class="panel card-pad set-card"><h3>Simulate a time <span style="color:var(--faint);font-weight:400">(demo)</span></h3><p>Preview any moment of the conference day.</p>'
       + '<input type="datetime-local" class="input-inline" id="demoInput" value="'+esc(toLocalInput(state.demoTime?new Date(state.demoTime):effectiveNow()))+'">'
       + '<div class="btn-row"><button class="btn" id="btnSetTime">Use this time</button>'+(state.demoTime?'<button class="btn ghost" id="btnRealTime">Use real time</button>':"")+'</div></div>'
-      + '<div class="panel card-pad set-card" style="grid-column:1/-1"><h3>About</h3><p class="kv">COP31 Brief Buddy · fictional dummy data for testing. Content you import stays in this browser on this device. '+esc(m.classification||"")+'</p></div>'
-      + '</div><div class="hintline">COP31 Brief Buddy · v2</div>';
+      + '<div class="panel card-pad set-card"><h3>About</h3><p class="kv">COP31 Brief Buddy · fictional dummy data for testing. Content you import stays in this browser on this device. '+esc(m.classification||"")+'</p></div>'
+      + '</div><div class="hintline">COP31 Brief Buddy</div>';
   }
   function toLocalInput(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes()); }
 
@@ -276,7 +224,7 @@
     document.querySelectorAll("[data-tab]").forEach(function(btn){ btn.classList.toggle("active", btn.dataset.tab===state.view); });
   }
   function go(view){ state.view=view; document.querySelectorAll(".pane").forEach(function(s){ s.classList.toggle("active", s.id==="tab-"+view); });
-    if(view==="next") renderNext(); else if(view==="schedule") renderSchedule(); else if(view==="briefs") renderBriefs(); else if(view==="ask") renderAsk(); else if(view==="settings") renderSettings();
+    if(view==="next") renderNext(); else if(view==="schedule") renderSchedule(); else if(view==="briefs") renderBriefs(); else if(view==="settings") renderSettings();
     updateChrome(); window.scrollTo(0,0);
   }
 
@@ -290,23 +238,18 @@
     var t=ev.target;
     var tab=t.closest("[data-tab]"); if(tab){ go(tab.dataset.tab); return; }
     var ob=t.closest("[data-openbrief]"); if(ob){ state.briefId=ob.dataset.openbrief; go("briefs"); return; }
-    var ga=t.closest("[data-goask]"); if(ga){ state.askId=ga.dataset.goask; state.askMode="redteam"; go("ask"); return; }
-    var pk=t.closest("[data-pick]"); if(pk){ state.briefId=pk.dataset.pick; renderBriefs(); return; }
-    var md=t.closest("[data-mode]"); if(md){ state.askMode=md.dataset.mode; answer(state.askMode); document.querySelectorAll(".mode").forEach(function(b){b.classList.toggle("active",b===md);}); return; }
-    var st=t.closest("[data-settheme]"); if(st){ applyTheme(st.dataset.settheme); return; }
+    var sg=t.closest("[data-ask]"); if(sg){ var qi=el("askInput"); if(qi) qi.value=sg.dataset.ask; answer(sg.dataset.ask); return; }
     var id=(t.closest("button")||{}).id;
-    if(id==="themeBtn"||id==="themeBtnTop") toggleTheme();
-    else if(id==="btnImport") el("fileInput").click();
+    if(id==="btnImport") el("fileInput").click();
     else if(id==="btnExport") exportData();
     else if(id==="btnReset"){ if(confirm("Replace current content with the built-in sample?")) resetSample(); }
     else if(id==="btnSetTime"){ var v=el("demoInput").value; if(v){ state.demoTime=new Date(v).toISOString(); localStorage.setItem(LS_DEMO,state.demoTime); go("next"); } }
     else if(id==="btnRealTime"){ state.demoTime=""; localStorage.removeItem(LS_DEMO); go("next"); }
-    else if(id==="askSend"){ answer(null, el("askInput").value||"brief"); }
+    else if(id==="askSend"){ answer(el("askInput").value); }
   });
-  document.addEventListener("change", function(ev){ if(ev.target.id==="askSelect"){ state.askId=ev.target.value; answer(state.askMode); } });
-  document.addEventListener("keydown", function(ev){ if(ev.key==="Enter" && ev.target.id==="askInput"){ answer(null, ev.target.value||"brief"); } });
+  document.addEventListener("change", function(ev){ if(ev.target.id==="briefSelect"){ state.briefId=ev.target.value; renderBriefs(); } });
+  document.addEventListener("keydown", function(ev){ if(ev.key==="Enter" && ev.target.id==="askInput"){ answer(ev.target.value); } });
   el("fileInput").addEventListener("change", function(ev){ if(ev.target.files&&ev.target.files[0]) importFile(ev.target.files[0]); ev.target.value=""; });
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){ if(!localStorage.getItem(LS_THEME)) applyTheme("system"); });
   window.addEventListener("online", updateChrome); window.addEventListener("offline", updateChrome);
   setInterval(function(){ var c=el("liveClock"); if(c) c.textContent=fmtClock(new Date()); if(state.view==="next"&&!state.demoTime) renderNext(); }, 30000);
 
@@ -319,10 +262,11 @@
   /* ---------- boot ---------- */
   function setupIcons(){ document.querySelectorAll("[data-icon]").forEach(function(n){ n.innerHTML=ic(n.dataset.icon); }); }
   loadData().then(function(){
-    setupIcons(); updateThemeIcons();
+    setupIcons();
     el("liveClock").textContent=fmtClock(new Date());
     var h=(location.hash||"").replace(/^#/,"");
-    if(["schedule","briefs","ask","settings","next"].indexOf(h)>=0) state.view=h;
+    if(h==="ask") state.view="briefs";
+    else if(["schedule","briefs","settings","next"].indexOf(h)>=0) state.view=h;
     else if(h.indexOf("e/")===0){ state.briefId=h.slice(2); state.view="briefs"; }
     go(state.view);
   });

@@ -4,24 +4,24 @@ A phone/iPad app that gives a Minister an **at-a-glance briefing for their next 
 COP31 — time, venue, counterpart, the talking points to deliver, objectives, the one thing to
 avoid, and a source-grounded **Ask** — without wading through the full briefing pack.
 
-Installable (PWA), **switchable light/dark**, and phone-first. Everything here is **fictional
-sample data** for testing (Singapore delegation, anonymised "Minister A", a placeholder portrait).
+Installable (PWA), dark theme, and phone-first. Everything here is **fictional sample data** for
+testing (Singapore delegation, anonymised "Minister A", an illustrative avatar).
 
 > ⚠️ No real or classified material is stored in this repository. See
 > [`docs/SECURITY.md`](docs/SECURITY.md) for how real content is handled.
 
 ---
 
-## The four tabs
+## The tabs
 
 | Tab | What it does |
 |---|---|
-| **Next** | The immediate engagement as a glanceable hero: countdown, venue, **risk flags**, objective, **Main Talking Points with source citations**, **watch point**, **"if asked"** line, and a counterpart card (illustrated photo, portfolio, factual **public background**). |
+| **Next** | The immediate engagement as a glanceable hero: countdown, venue, **risk flags**, objective, **Main Talking Points with source citations**, **watch point**, **"if asked"** line, and a counterpart card (illustrated avatar, portfolio, factual **public background**). |
 | **Schedule** | The full day's timeline; the current/next item is flagged, briefed items open their brief. |
-| **Briefs** | Pick **any** engagement and read its full AI-generated, source-grounded brief. |
-| **Ask** | **Choose a meeting** and ask about it. Quick modes (**Main talking points**, **anticipated questions**, watch point) plus free text — with a **"not in the approved pack, won't invent"** guardrail. |
+| **Briefs** | Pick **any** engagement (via **Choose a meeting**), read its full source-grounded brief once — objective, Main Talking Points, watch point, **anticipated questions**, counterpart — then **ask about it** in a free-text box (source-grounded, with a **"not in the approved pack, won't invent"** guardrail). Reading + asking are merged here. |
+| **Settings** | Import/export content, simulate a time, install info. |
 
-Deep links for testing: `#next`, `#schedule`, `#briefs`, `#ask`, `#settings`, `#e/<id>`, and `?theme=dark|light`.
+Deep links for testing: `#next`, `#schedule`, `#briefs`, `#settings`, `#e/<id>`.
 
 ---
 

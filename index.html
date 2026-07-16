@@ -1,43 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>COP31 Brief Buddy</title>
-  <meta name="description" content="At-a-glance ministerial briefings for COP31 — next engagement, talking points, and a source-grounded Ask." />
+  <meta name="description" content="At-a-glance ministerial briefings for COP31 — next engagement, talking points, and a source-grounded ask." />
   <meta name="theme-color" content="#0b1220" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Brief Buddy" />
-  <script>
-    // Set theme before first paint to avoid a flash.
-    (function () {
-      try {
-        var q = new URLSearchParams(location.search).get('theme');
-        var t = q || localStorage.getItem('bb:theme');
-        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
-      } catch (e) {}
-    })();
-  </script>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app">
     <!-- Desktop side nav -->
     <aside class="sidenav">
-      <div class="brand" title="COP31 Brief Buddy">BB</div>
       <nav class="nav">
         <button class="nav-btn active" data-tab="next"><span data-icon="target"></span><em>Next</em></button>
         <button class="nav-btn" data-tab="schedule"><span data-icon="calendar"></span><em>Schedule</em></button>
         <button class="nav-btn" data-tab="briefs"><span data-icon="doc"></span><em>Briefs</em></button>
-        <button class="nav-btn" data-tab="ask"><span data-icon="chat"></span><em>Ask</em></button>
       </nav>
       <div class="nav-foot">
         <button class="nav-btn" data-tab="settings"><span data-icon="gear"></span><em>Settings</em></button>
-        <button class="nav-btn theme-toggle" id="themeBtn" title="Toggle light / dark"><span data-icon="moon"></span></button>
       </div>
     </aside>
 
@@ -50,7 +36,6 @@
         </div>
         <div class="topbar-side">
           <span class="pill clock"><span data-icon="clock"></span><span id="liveClock">--:--</span></span>
-          <button class="pill icon-only" id="themeBtnTop" title="Toggle light / dark"><span data-icon="moon"></span></button>
         </div>
       </header>
 
@@ -59,7 +44,6 @@
       <section id="tab-next" class="pane active"><div id="next-root"></div></section>
       <section id="tab-schedule" class="pane"><div id="schedule-root"></div></section>
       <section id="tab-briefs" class="pane"><div id="briefs-root"></div></section>
-      <section id="tab-ask" class="pane"><div id="ask-root"></div></section>
       <section id="tab-settings" class="pane"><div id="settings-root"></div></section>
     </main>
   </div>
@@ -69,8 +53,7 @@
     <button class="nav-btn active" data-tab="next"><span data-icon="target"></span><em>Next</em></button>
     <button class="nav-btn" data-tab="schedule"><span data-icon="calendar"></span><em>Schedule</em></button>
     <button class="nav-btn" data-tab="briefs"><span data-icon="doc"></span><em>Briefs</em></button>
-    <button class="nav-btn" data-tab="ask"><span data-icon="chat"></span><em>Ask</em></button>
-    <button class="nav-btn" data-tab="settings"><span data-icon="gear"></span><em>More</em></button>
+    <button class="nav-btn" data-tab="settings"><span data-icon="gear"></span><em>Settings</em></button>
   </nav>
 
   <input type="file" id="fileInput" accept="application/json,.json" hidden />
