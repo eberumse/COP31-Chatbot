@@ -16,10 +16,10 @@ sample data** for testing (Singapore delegation, anonymised "Minister A", a plac
 
 | Tab | What it does |
 |---|---|
-| **Next** | The immediate engagement as a glanceable hero: countdown, venue, walk time, **risk flags**, objective, **talking points with source citations**, **watch point**, **"if asked"** line, counterpart card (photo, portfolio, **public context**), and **what changed**. |
+| **Next** | The immediate engagement as a glanceable hero: countdown, venue, **risk flags**, objective, **Main Talking Points with source citations**, **watch point**, **"if asked"** line, and a counterpart card (illustrated photo, portfolio, factual **public background**). |
 | **Schedule** | The full day's timeline; the current/next item is flagged, briefed items open their brief. |
 | **Briefs** | Pick **any** engagement and read its full AI-generated, source-grounded brief. |
-| **Ask** | Pick **any** brief and ask about it. Quick modes (60-sec brief, **anticipated questions**, what changed, source trace, watch point) plus free text — with a **"not in the approved pack, won't invent"** guardrail. |
+| **Ask** | **Choose a meeting** and ask about it. Quick modes (**Main talking points**, **anticipated questions**, watch point) plus free text — with a **"not in the approved pack, won't invent"** guardrail. |
 
 Deep links for testing: `#next`, `#schedule`, `#briefs`, `#ask`, `#settings`, `#e/<id>`, and `?theme=dark|light`.
 
@@ -29,14 +29,16 @@ Deep links for testing: `#next`, `#schedule`, `#briefs`, `#ask`, `#settings`, `#
 
 This repo is the **Minister-facing front end**. The full picture is two pieces:
 
-1. **Staff console** *(next phase — not built yet)* — where staff upload the full briefs and an
-   **approved enterprise AI** (e.g. ChatGPT Enterprise / a cleared model) summarises them into the
-   structured brief the app shows, with a review/approve step.
-2. **Brief Buddy** *(this app)* — displays the approved briefs and provides the source-grounded
-   **Ask**. In the current mock, Ask answers from the loaded brief (rules-based); it can later call
-   the same enterprise AI.
+1. **AI agent** *(next phase — not built yet)* — points at wherever the cleared documents live
+   (a SharePoint folder / ChatGPT Enterprise space) and **summarises the latest cleared docs
+   automatically** into the structured brief the app shows. No separate "officer re-runs AI" step
+   and no manual review gate — staff just keep the latest cleared document and delete superseded
+   ones; the agent always summarises what's currently there.
+2. **Brief Buddy** *(this app)* — displays those briefs and provides the source-grounded **Ask**.
+   In the current mock, Ask answers from the loaded brief (rules-based); it can later call the same
+   enterprise AI.
 
-So the AI does the heavy summarising once, at prep time; the Minister sees clean, approved output.
+So the AI does the summarising automatically from the document source; the Minister sees clean output.
 
 ---
 

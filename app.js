@@ -119,7 +119,7 @@
       + (c.photo&&c.photoNote?'<div class="photo-note">'+esc(c.photoNote)+'</div>':'')+'</div></div>'
       + '<div class="cp-mini"><div class="mini"><div class="l">Portfolio</div><div class="v">'+esc(c.portfolio||"—")+'</div></div>'
       + '<div class="mini"><div class="l">Setting</div><div class="v">'+esc(c.country||"—")+'</div></div></div>'
-      + (c.publicContext?'<div class="public-ctx"><div class="blocktitle">'+ic("web")+' Public context</div><p>'+esc(c.publicContext)+'</p>'
+      + (c.publicBackground?'<div class="public-ctx"><div class="blocktitle">'+ic("web")+' Public background</div><p>'+esc(c.publicBackground)+'</p>'
         + '<div class="src-row">'+(c.publicSources||[]).map(function(s){return '<span class="src web">'+esc(s)+'</span>';}).join("")+'</div></div>':'')
       + '</div>';
   }
@@ -130,12 +130,6 @@
         + (s?'<div class="src-row"><span class="src">'+esc(s)+'</span></div>':'')+'</div></div>';
     }).join("")+'</div>';
   }
-  function changedHTML(e){
-    var head='<div class="changed-head"><span class="date-chip">'+esc(fmtDate(e.initialBriefDate))+'</span>'+ic("arrow")
-      +'<span class="date-chip">'+esc(fmtDate(e.currentBriefDate))+'</span><span>· '+esc(e.version||"")+'</span></div>';
-    return head+'<ul class="change-list">'+(e.changed||[]).map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';
-  }
-
   /* ---------- NEXT ---------- */
   function renderNext(){
     var n=nextEngagement(), e=n.hero;
@@ -147,20 +141,19 @@
     var main='<div class="panel card-pad hero"><div class="hero-in">'
       + '<div class="kicker"><span class="count-badge">'+ic("clock")+esc(label)+'</span><span class="type-chip">'+ic("shield")+esc(e.type)+'</span></div>'
       + '<div class="hero-time">'+fmtClock(start)+'–'+fmtClock(end)+'</div>'
-      + '<div class="hero-when">'+esc(fmtDay(start))+'</div>'
+      + '<div class="hero-when">'+esc(fmtDay(start))+(e.updated?' · Updated '+esc(fmtDate(e.updated)):'')+'</div>'
       + '<div class="hero-title">'+esc(e.title)+'</div>'
-      + '<div class="meta-strip"><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span>'+(e.walkTime?'<span class="meta-item">'+ic("walk")+esc(e.walkTime)+'</span>':'')+'</div>'
+      + '<div class="meta-strip"><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span></div>'
       + (flags?'<div class="flag-row">'+flags+'</div>':'')
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
-      + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Say this</div>'+talkingHTML(e)
+      + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points</div>'+talkingHTML(e)
       + '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
       + '<div class="callout warn"><div class="blocktitle">'+ic("shield")+' If asked</div><p>'+esc(e.ifAsked)+'</p></div>'
       + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Full brief</button>'
       + '<button class="btn" data-goask="'+esc(e.id)+'">'+ic("challenge")+' Prep likely questions</button></div>'
       + '</div></div>';
 
-    var rail='<div class="rail">'+counterpartHTML(e)
-      + '<div class="panel card-pad"><div class="blocktitle">'+ic("spark2")+' What changed</div>'+changedHTML(e)+'</div></div>';
+    var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
 
     el("next-root").innerHTML='<div class="grid-2">'+main+rail+'</div>';
   }
@@ -200,29 +193,27 @@
       + '<span class="ai-tag">'+ic("spark2")+' AI-generated · source-grounded</span>'
       + '<div class="detail-title">'+esc(e.title)+'</div>'
       + '<div class="meta-strip"><span class="meta-item">'+ic("clock")+esc(fmtClock(start))+'–'+esc(fmtClock(new Date(e.end)))+'</span><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span><span class="type-chip">'+esc(e.type)+'</span></div>'
+      + (e.updated?'<div class="updated-line">Updated '+esc(fmtDate(e.updated))+'</div>':'')
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' One-line objective</div><p>'+esc(e.objective)+'</p></div>'
-      + '<div style="margin-top:20px" class="blocktitle">'+ic("chat")+' Say this <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
+      + '<div style="margin-top:20px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
       + '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>'
       + '<div class="btn-row"><button class="btn primary" data-goask="'+esc(e.id)+'">'+ic("chat")+' Ask about this brief</button></div>'
       + '</div>'
-      + '<div class="panel card-pad"><div class="blocktitle">'+ic("spark2")+' What changed</div>'+changedHTML(e)+'</div>'
       + counterpartHTML(e)
       + '</div>';
   }
 
   /* ---------- ASK ---------- */
   var MODES=[
-    {k:"brief", label:"60-sec brief"},
+    {k:"brief", label:"Main talking points"},
     {k:"redteam", label:"Anticipated questions"},
-    {k:"changed", label:"What changed"},
-    {k:"trace", label:"Source trace"},
     {k:"watch", label:"Watch point"}
   ];
   function renderAsk(){
     var opts=engagements().map(function(e){ return '<option value="'+esc(e.id)+'"'+(e.id===state.askId?" selected":"")+'>'+esc(e.title)+' — '+esc(e.type)+'</option>'; }).join("");
     var modes=MODES.map(function(m){ return '<button class="mode'+(m.k===state.askMode?' active':'')+'" data-mode="'+m.k+'">'+esc(m.label)+'</button>'; }).join("");
     var left='<div class="panel card-pad">'
-      + '<div class="field-label">Which brief?</div><select class="select" id="askSelect">'+opts+'</select>'
+      + '<div class="field-label">Choose a meeting</div><select class="select" id="askSelect">'+opts+'</select>'
       + '<div class="explain"><b>Red-team</b> surfaces questions your counterpart is likely to put to <i>you</i>. <b>Ask</b> looks up anything inside this approved brief — you always get a source-grounded answer, or a clear “not in the pack”.</div>'
       + '<div class="field-label" style="margin-top:16px">Quick modes</div><div class="mode-row">'+modes+'</div>'
       + '<div class="ask-box"><input class="ask-input" id="askInput" placeholder="Ask about this brief…"><button class="ask-send" id="askSend">Ask</button></div>'
@@ -236,18 +227,14 @@
     var lower=(q||"").toLowerCase();
     if(q){
       if(/anticipat|red.?team|challeng|question|hostile/.test(lower)) mode="redteam";
-      else if(/chang|updat|differ|new/.test(lower)) mode="changed";
-      else if(/source|trace|cite|where|proof/.test(lower)) mode="trace";
       else if(/avoid|watch|risk|careful/.test(lower)) mode="watch";
       else if(/commit|concession|promise|new (finance|money|fund)|number|figure|guarantee/.test(lower)) mode="unsupported";
       else mode="brief";
     }
-    if(mode==="redteam"){ tag=ic("challenge")+" Red-team — likely questions"; body='<div class="qa-list">'+e.redTeam.map(function(x){return '<div class="qa"><strong>'+esc(x.q)+'</strong><span>Basis: '+esc(x.basis)+'</span></div>';}).join("")+'</div><p style="margin-top:12px" class="basis">Use public context only to <i>anticipate</i> the question — the answer the Minister gives should still come from the approved brief.</p>'; }
-    else if(mode==="changed"){ tag=ic("spark2")+" What changed"; body=changedHTML(e); }
-    else if(mode==="trace"){ tag=ic("doc")+" Source trace"; body='<p>The objective and talking points are supported by:</p><ul>'+e.sources.map(function(s){return "<li>"+esc(s)+"</li>";}).join("")+'</ul><p class="basis">Counterpart context is labelled separately as public web context and does not override the approved internal brief.</p>'; }
+    if(mode==="redteam"){ tag=ic("challenge")+" Anticipated questions"; body='<div class="qa-list">'+e.redTeam.map(function(x){return '<div class="qa"><strong>'+esc(x.q)+'</strong><span>Basis: '+esc(x.basis)+'</span></div>';}).join("")+'</div><p style="margin-top:12px" class="basis">These are questions the counterpart or media may put to the Minister — the answer should still come from the approved brief.</p>'; }
     else if(mode==="watch"){ tag=ic("alert")+" Watch point"; body='<p><strong>'+esc(e.watchPoint)+'</strong></p><p>If pressed: '+esc(e.ifAsked)+'</p>'; }
     else if(mode==="unsupported"){ cls="unsupported"; tag=ic("alert")+" Not in the approved pack"; body='<p><strong>That isn’t covered by the approved brief.</strong></p><p>The pack offers no line beyond: “'+esc(e.ifAsked)+'”. Brief Buddy will not invent a new commitment or position — check with your negotiators.</p>'; }
-    else { tag=ic("spark2")+" 60-second brief"; body='<ul>'+e.sayThis.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p style="margin-top:10px" class="basis">Tone: '+esc(e.tone)+'</p>'; }
+    else { tag=ic("spark2")+" Main talking points"; body='<ul>'+e.sayThis.map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p style="margin-top:10px" class="basis">Tone: '+esc(e.tone)+'</p>'; }
 
     var srcs='<div class="src-row" style="margin-top:14px">'+e.sources.map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>';
     var slot=el("answer-slot"); if(slot) slot.innerHTML='<div class="answer '+cls+'"><span class="atag">'+tag+'</span>'+body+srcs+'</div>';

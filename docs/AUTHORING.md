@@ -37,18 +37,14 @@ and load it via **Settings → Import**. You never edit the app code. Start from
 | `day` | Integer day number. |
 | `start` / `end` | Local date-time, no timezone: `"2026-07-16T15:15:00"`. Drives "Next". |
 | `title`, `type`, `venue` | `type`: `Bilateral` \| `Plenary` \| `Roundtable` \| `Media` \| `Coalition` \| `Internal`. |
-| `walkTime` | e.g. `"6 min walk"`. |
-| `version` | e.g. `"v4"`. |
-| `initialBriefDate` | `"YYYY-MM-DD"` — when the brief was first issued (shown in **What changed**). |
-| `currentBriefDate` | date or date-time of the current version (shown in **What changed**). |
+| `updated` | Date or date-time of this brief, e.g. `"2026-07-16T14:42:00"` — shown as an "Updated …" stamp. |
 | `objective` | One-line goal. |
 | `tone` | Delivery tone, e.g. `"Warm, purposeful, no new concessions."` |
 | `flags` | Array of short risk chips (e.g. `"Media-sensitive"`). Words like *sensitive / avoid / no* colour them amber/red. |
-| `sayThis` | The talking points (3–5 short lines) — **the gist**. |
+| `sayThis` | The **Main Talking Points** (3–5 short lines) — the gist. |
 | `sources` | Citations, e.g. `"brief.pdf · v4 · p.2 ¶4"`. Mapped one-per-talking-point (falls back to the last). |
 | `watchPoint` | The single most important thing to avoid. |
 | `ifAsked` | Fallback line if pressed. |
-| `changed` | Array of changes since the previous version. |
 | `redTeam` | Array of `{ "q", "basis" }` — anticipated questions + why (shown under **Ask → Anticipated questions**). |
 | `briefFile` | Optional link to the source doc (`"#"` in the sample). |
 
@@ -59,8 +55,8 @@ and load it via **Settings → Import**. You never edit the app code. Start from
 | `initials`, `name`, `role`, `country`, `flag` | `initials` are the avatar fallback when there's no `photo`. `flag` is an emoji badge. |
 | `portfolio` | Their brief, e.g. `"Climate negotiations · energy transition"`. |
 | `photo` | Path/URL/`data:` URI to a portrait, or `null` to show the initials avatar. |
-| `photoNote` | Shown under the photo, e.g. `"Illustrative placeholder — not a real person"`. |
-| `publicContext` | Their public line (kept **separate** from the internal brief). |
+| `photoNote` | Shown under the photo, e.g. `"Illustration — not a real person"`. |
+| `publicBackground` | Neutral, **factual** public info about the counterpart (role, tenure, public appearances) — kept **separate** from the internal brief. Avoid characterising their negotiating stance. |
 | `publicSources` | Array of public/open-source references. |
 
 ## Photos, offline-safe

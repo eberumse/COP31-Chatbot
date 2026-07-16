@@ -1,18 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="Illustrative placeholder portrait">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="Illustrative avatar (not a real person)">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#eef2f8"/><stop offset="1" stop-color="#c7d2e0"/>
-    </linearGradient>
-    <radialGradient id="halo" cx="50%" cy="34%" r="46%">
-      <stop offset="0" stop-color="#ffffff" stop-opacity=".6"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="fig" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a6b5ca"/><stop offset="1" stop-color="#78899f"/>
-    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9eef7"/><stop offset="1" stop-color="#d3ddec"/></linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0bd97"/><stop offset="1" stop-color="#e2a877"/></linearGradient>
   </defs>
   <rect width="480" height="480" fill="url(#bg)"/>
-  <rect width="480" height="480" fill="url(#halo)"/>
-  <path d="M104 480 C104 368 158 312 240 312 C322 312 376 368 376 480 Z" fill="url(#fig)"/>
-  <circle cx="240" cy="188" r="82" fill="url(#fig)"/>
-  <circle cx="240" cy="188" r="82" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="3"/>
+  <!-- suit -->
+  <path d="M84 480 C84 388 140 346 210 346 L270 346 C340 346 396 388 396 480 Z" fill="#2b3a57"/>
+  <!-- collar -->
+  <path d="M205 346 L240 392 L240 346 Z" fill="#f6f9fd"/><path d="M275 346 L240 392 L240 346 Z" fill="#e7eef7"/>
+  <path d="M240 352 L251 374 L240 420 L229 374 Z" fill="#2f8f83"/>
+  <!-- neck -->
+  <path d="M214 300 L266 300 L266 352 L214 352 Z" fill="#e0a578"/>
+  <!-- ears -->
+  <ellipse cx="150" cy="210" rx="15" ry="21" fill="url(#skin)"/><ellipse cx="330" cy="210" rx="15" ry="21" fill="url(#skin)"/>
+  <!-- head -->
+  <ellipse cx="240" cy="200" rx="92" ry="104" fill="url(#skin)"/>
+  <!-- hair -->
+  <path d="M148 208 C144 118 196 92 240 92 C284 92 336 118 332 208 C326 168 312 156 300 152 C300 140 274 132 240 132 C206 132 180 140 180 152 C168 156 154 168 148 208 Z" fill="#3c3444"/>
+  <!-- eyebrows -->
+  <path d="M198 180 Q214 171 230 179" fill="none" stroke="#3c3444" stroke-width="5" stroke-linecap="round"/>
+  <path d="M250 179 Q266 171 282 180" fill="none" stroke="#3c3444" stroke-width="5" stroke-linecap="round"/>
+  <!-- eyes -->
+  <ellipse cx="213" cy="198" rx="9" ry="11" fill="#33303a"/><circle cx="216" cy="194" r="2.6" fill="#fff"/>
+  <ellipse cx="267" cy="198" rx="9" ry="11" fill="#33303a"/><circle cx="270" cy="194" r="2.6" fill="#fff"/>
+  <!-- nose -->
+  <path d="M240 204 L234 226 Q240 231 247 225" fill="none" stroke="#cf9166" stroke-width="3" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <circle cx="190" cy="234" r="11" fill="#ef9f97" opacity=".45"/><circle cx="290" cy="234" r="11" fill="#ef9f97" opacity=".45"/>
+  <!-- smile -->
+  <path d="M214 250 Q240 272 266 250" fill="none" stroke="#b3634c" stroke-width="6" stroke-linecap="round"/>
 </svg>

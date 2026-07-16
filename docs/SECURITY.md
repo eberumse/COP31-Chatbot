@@ -38,13 +38,14 @@ stored locally in the browser. It is never committed, never uploaded, never tran
 The summarising ("turn the full brief into a short gist") is a **preparation task**, done in
 your own environment with a tool cleared for that material:
 
-1. Use your office's **approved AI tool** (whatever is authorised for the classification level)
-   with the prompt in [`PREP-PROMPT.md`](PREP-PROMPT.md) to condense each brief into the app's
-   JSON format. If no AI tool is cleared for the material, a staffer condenses it by hand — the
-   app works the same either way.
-2. A human **reviews and approves** the wording (essential for diplomatic accuracy).
-3. Save the result as a JSON file and get it to the device through your **normal secure
-   channel** (the same way you'd send any restricted document).
+1. Point the **AI agent** at wherever the cleared documents live (a SharePoint folder / ChatGPT
+   Enterprise space); it summarises the latest cleared documents into the app's JSON
+   automatically — no separate "officer re-runs AI" step. (If no AI tool is cleared for the
+   material, a staffer condenses it by hand instead — the app works the same either way.)
+2. *(Optional, per your policy.)* There is **no mandatory review gate** — the summary flows
+   straight through. Add a human check here only if your process requires it.
+3. Deliver the resulting JSON to the device through your **normal secure channel** (as with any
+   restricted document).
 4. On the device: **Settings → Import briefing file**.
 
 At no point does the real content go through this GitHub repository or any public AI service.
