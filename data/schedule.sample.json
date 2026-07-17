@@ -6,13 +6,13 @@
     "conference": "COP31 — UN Climate Change Conference",
     "host": "Blue Zone",
     "classification": "DUMMY — Unclassified sample",
-    "updatedLabel": "Sample data · 9 Nov 2026, 08:00",
+    "updatedLabel": "Sample data · generated from source PDFs by convert.py",
     "principal": {
       "name": "Minister for Sustainability & Environment",
       "delegation": "Singapore",
       "flag": "🇸🇬"
     },
-    "note": "ALL CONTENT IS FICTIONAL DUMMY DATA FOR TESTING. Counterparts are anonymised ('Minister A'). Any avatar is an illustration, not a real person. 'Public' items are indicative placeholders, not real reporting."
+    "note": "ALL CONTENT IS FICTIONAL DUMMY DATA FOR TESTING. Counterparts are anonymised ('Minister A'). Generated from the source PDFs in docs/sample-source/ by convert.py."
   },
   "schedule": [
     {
@@ -145,7 +145,7 @@
       "type": "Internal",
       "venue": "Delegation Office",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-09T08:00:00",
+      "updated": "2026-11-09",
       "objective": "Align the delegation on red lines, priorities and division of labour before the high-level segment opens.",
       "tone": "Focused, decisive — listen, then direct.",
       "flags": [
@@ -160,6 +160,7 @@
         "flag": "🇸🇬",
         "portfolio": "Negotiation teams across all tracks",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Internal coordination meeting; not on the public record.",
         "publicSources": []
       },
@@ -223,7 +224,7 @@
       "type": "Plenary",
       "venue": "Plenary Hall",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-10T07:30:00",
+      "updated": "2026-11-10",
       "objective": "Deliver Singapore's national statement: ambitious, implementable, and partnership-focused.",
       "tone": "Statesmanlike, warm, forward-looking.",
       "flags": [
@@ -239,6 +240,7 @@
         "flag": "🌐",
         "portfolio": "Heads of delegation and ministers",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Open, broadcast session; all statements are on the public record.",
         "publicSources": [
           "Conference public programme"
@@ -306,7 +308,7 @@
       "type": "Bilateral",
       "venue": "Bilateral Room 4B, Level 2",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-10T12:30:00",
+      "updated": "2026-11-10",
       "objective": "Secure Country A's support for balanced finance text and confirm alignment on carbon markets.",
       "tone": "Warm, purposeful, no new concessions.",
       "flags": [
@@ -321,8 +323,8 @@
         "country": "Country A (major developed economy)",
         "flag": "🏳️",
         "portfolio": "Climate negotiations · energy transition · finance",
-        "photo": "assets/counterpart-minister-a.svg",
-        "photoNote": "Illustration — not a real person",
+        "photo": null,
+        "photoNote": "",
         "publicBackground": "Country A's Minister for Climate and Energy since 2024; delivered Country A's national statement at the opening of the high-level segment.",
         "publicSources": [
           "Official ministry biography",
@@ -416,7 +418,7 @@
       "type": "Coalition",
       "venue": "Room Amazonia 1",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-11T07:45:00",
+      "updated": "2026-11-11",
       "objective": "Coordinate a joint coalition push to hold the line on mitigation ambition in the cover text.",
       "tone": "Collegial, energising, unity-focused.",
       "flags": [
@@ -428,9 +430,10 @@
         "name": "High Ambition Coalition",
         "role": "Coalition ministers",
         "country": "Cross-regional grouping",
-        "flag": "🤝",
+        "flag": "🌐",
         "portfolio": "Mitigation ambition · cover decision",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "A cross-regional grouping that periodically issues joint ministerial statements; membership and statements are public.",
         "publicSources": [
           "Coalition joint statements"
@@ -496,7 +499,7 @@
       "type": "Roundtable",
       "venue": "Summit Studio C",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-11T11:00:00",
+      "updated": "2026-11-11",
       "objective": "Position Singapore as a practical partner for scalable, high-integrity transition finance.",
       "tone": "Pragmatic, partnership-oriented.",
       "flags": [
@@ -504,14 +507,15 @@
         "Partner ask likely"
       ],
       "counterpart": {
-        "initials": "FP",
+        "initials": "FM",
         "name": "Finance ministers & MDBs",
         "role": "Roundtable participants",
         "country": "Multilateral",
-        "flag": "🏦",
+        "flag": "🌐",
         "portfolio": "Transition finance · blended finance · MDB reform",
         "photo": null,
-        "publicBackground": "Multilateral development banks and finance ministries publish transition-finance materials and communiqués publicly.",
+        "photoNote": "",
+        "publicBackground": "Multilateral development banks and finance ministries publish transition- finance materials and communiqués publicly.",
         "publicSources": [
           "Partner public communiqués"
         ]
@@ -578,7 +582,7 @@
       "type": "Bilateral",
       "venue": "Bilateral Room 3A",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-12T07:30:00",
+      "updated": "2026-11-12",
       "objective": "Deepen practical cooperation with Country B on adaptation and capacity, and hear its priorities for the endgame.",
       "tone": "Friendly, attentive, solutions-focused.",
       "flags": [
@@ -660,7 +664,7 @@
       "type": "Media",
       "venue": "Press Zone, Level 1",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-12T15:00:00",
+      "updated": "2026-11-12",
       "objective": "Keep public messaging disciplined and avoid previewing negotiation trade-offs.",
       "tone": "Clear, calm, non-speculative.",
       "flags": [
@@ -668,13 +672,14 @@
         "Use approved lines"
       ],
       "counterpart": {
-        "initials": "ME",
+        "initials": "AM",
         "name": "Accredited media",
         "role": "Conference press pool",
         "country": "International media",
-        "flag": "🎙️",
+        "flag": "🌐",
         "portfolio": "Public communications",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Conference press pool; briefings and coverage are publicly available.",
         "publicSources": [
           "Conference press schedule"
@@ -740,7 +745,7 @@
       "type": "Roundtable",
       "venue": "Room Tapajós",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-13T07:30:00",
+      "updated": "2026-11-13",
       "objective": "Push to conclude operational Article 6 rules with high environmental integrity.",
       "tone": "Technical but accessible, constructive, firm on integrity.",
       "flags": [
@@ -748,13 +753,14 @@
         "Integrity red line"
       ],
       "counterpart": {
-        "initials": "A6",
+        "initials": "AP",
         "name": "Article 6 co-facilitators & parties",
         "role": "Ministerial consultation",
         "country": "Multilateral",
-        "flag": "🌍",
+        "flag": "🌐",
         "portfolio": "Carbon markets · Article 6.2 / 6.4",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Ministerial consultations on Article 6 are convened by the presidency; outcomes are reported publicly.",
         "publicSources": [
           "Presidency consultation notes"
@@ -824,7 +830,7 @@
       "type": "Roundtable",
       "venue": "Action Hub",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-13T12:00:00",
+      "updated": "2026-11-13",
       "objective": "Listen to youth and civil society, and show Singapore takes intergenerational concerns seriously.",
       "tone": "Open, humble, genuine.",
       "flags": [
@@ -832,13 +838,14 @@
         "Authenticity matters"
       ],
       "counterpart": {
-        "initials": "YC",
+        "initials": "YS",
         "name": "Youth & civil society",
         "role": "YOUNGO & NGO representatives",
         "country": "Global constituencies",
-        "flag": "🌱",
+        "flag": "🌐",
         "portfolio": "Intergenerational equity · climate justice",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Youth (YOUNGO) and NGO constituencies engage publicly at COP; their asks are on the record.",
         "publicSources": [
           "Constituency public statements"
@@ -904,7 +911,7 @@
       "type": "Plenary",
       "venue": "Plenary Hall",
       "classification": "DUMMY — Unclassified sample",
-      "updated": "2026-11-14T09:00:00",
+      "updated": "2026-11-14",
       "objective": "Deliver a closing intervention supporting a balanced final package that is ambitious and implementable.",
       "tone": "Confident, steady, constructive.",
       "flags": [
@@ -920,6 +927,7 @@
         "flag": "🌐",
         "portfolio": "Heads of delegation and ministers",
         "photo": null,
+        "photoNote": "",
         "publicBackground": "Closing plenary; all interventions are on the public record and broadcast.",
         "publicSources": [
           "Conference public programme"

@@ -410,8 +410,9 @@ def e(s): return html.escape(str(s if s is not None else ""))
 def brief_file(eng): return f"docs/sample-source/brief_{IDX[eng['id']]:02d}_{eng['id']}.pdf"
 IDX = {eng["id"]: i+1 for i, eng in enumerate(ENGAGEMENTS)}
 
-# ---- 1) build app JSON ----
-def build_json():
+# ---- build the in-memory programme (used only to lay out the schedule PDF).
+#      The app's data file is produced from the PDFs by convert.py, not here. ----
+def build_data():
     schedule = []
     for eng in ENGAGEMENTS:
         schedule.append({"date": eng["date"], "time": eng["start"][11:16], "end": eng["end"][11:16],
@@ -437,10 +438,6 @@ def build_json():
         }
         engs.append(o)
     data = {"meta": META, "schedule": schedule, "engagements": engs}
-    path = os.path.join(REPO, "data", "schedule.sample.json")
-    with open(path, "w") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print("wrote", path, "-", len(engs), "engagements,", len(schedule), "schedule rows")
     return data
 
 # ---- 2) PDF HTML templates ----
@@ -481,6 +478,10 @@ td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
 tr.dayrow td { background: #eef2f7; font-weight: 700; color: #2b6cb0; text-transform: uppercase; font-size: 8.5pt; letter-spacing: .05em; }
 .brf { color: #2f6b3a; font-weight: 700; }
 .no { color: #b0b7c3; }
+.flags { font-size: 9.5pt; color: #33405a; margin: 2px 0 6px; }
+.flags b { color: #0b1220; }
+.considers { margin: 2px 0 4px; }
+.ci { margin: 3px 0 3px 6px; }
 """
 
 def flag_class(f):
@@ -500,10 +501,9 @@ def brief_html(eng):
                  f'<b>When:</b> {e(fdate2(eng["date"]))}, {e(eng["start"][11:16])}–{e(eng["end"][11:16])} &nbsp;·&nbsp; '
                  f'<b>Where:</b> {e(eng["venue"])} &nbsp;·&nbsp; <b>Type:</b> {e(eng["type"])} &nbsp;·&nbsp; '
                  f'<b>Updated:</b> {e(fdate2(eng["updated"][:10]))}</div>')
-    # flags
+    # flags (labelled + middot-separated so the converter can split them)
     if eng["flags"]:
-        chips = "".join(f'<span class="chip {flag_class(f)}">{e(f)}</span>' for f in eng["flags"])
-        parts.append(f'<div>{chips}</div>')
+        parts.append('<div class="flags"><b>Flags:</b> ' + e(" · ".join(eng["flags"])) + '</div>')
     parts.append(f'<h2>Objective</h2><div>{e(eng["objective"])}</div>')
     parts.append(f'<h2>Tone</h2><div>{e(eng["tone"])}</div>')
     # counterpart
@@ -521,17 +521,18 @@ def brief_html(eng):
     parts.append(f'<h2>If asked / pressed</h2><div class="ask">{e(eng["ifAsked"])}</div>')
     # anticipated
     parts.append('<h2>Anticipated questions</h2>')
-    for a in eng["anticipated"]:
-        parts.append(f'<div class="q">{e(a["q"])} <span class="tag {e(a["whyTag"])}">{e(a["whyTag"])}</span></div>')
+    for qi, a in enumerate(eng["anticipated"], 1):
+        parts.append(f'<div class="q">Q{qi}. {e(a["q"])} <span class="tag {e(a["whyTag"])}">[{e(a["whyTag"])}]</span></div>')
         parts.append(f'<div class="why">Why it may come up: {e(a["why"])}</div>')
-        parts.append('<ul>' + "".join(
-            f'<li>{e(c["text"])} <span class="tag {e(c["source"])}">{e(c["source"])}</span></li>' for c in a["consider"]) + '</ul>')
-    # public info
+        parts.append('<div class="considers">' + "".join(
+            f'<div class="ci">» {e(c["text"])} <span class="tag {e(c["source"])}">[{e(c["source"])}]</span></div>' for c in a["consider"]) + '</div>')
+    # public info (marker + trailing [keywords: ...] so the converter can round-trip them)
     if eng.get("publicInfo"):
-        parts.append('<h2>Indicative public-domain notes <span class="src">(tentative — for the Ask fallback)</span></h2><ul>')
+        parts.append('<h2>Indicative public-domain notes <span class="src">(tentative — for the Ask fallback)</span></h2><div class="considers">')
         for p in eng["publicInfo"]:
-            parts.append(f'<li>{e(p["text"])}</li>')
-        parts.append('</ul>')
+            kw = ", ".join(p.get("keywords", []))
+            parts.append(f'<div class="ci">» {e(p["text"])} <span class="src">[keywords: {e(kw)}]</span></div>')
+        parts.append('</div>')
     parts.append(f'<div class="foot">FICTIONAL SAMPLE · COP31 Brief Buddy · brief_{idx:02d}_{e(eng["id"])} · not a real government document</div>')
     return "<!doctype html><html><head><meta charset='utf-8'><style>" + CSS + "</style></head><body>" + "".join(parts) + "</body></html>"
 
@@ -570,7 +571,7 @@ def render_pdf(htmlstr, name):
     return pp
 
 if __name__ == "__main__":
-    data = build_json()
+    data = build_data()
     p = render_pdf(schedule_html(data), "COP31_Ministerial_Programme")
     if p: print("wrote", p)
     for eng in ENGAGEMENTS:

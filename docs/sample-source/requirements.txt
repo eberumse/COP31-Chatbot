@@ -1,0 +1,3 @@
+# For convert.py (the PDF -> app-data converter)
+pypdf          # text extraction from the brief PDFs
+pdfplumber     # table (column-position) extraction from the schedule PDF
