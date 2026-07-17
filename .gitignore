@@ -18,3 +18,7 @@ Thumbs.db
 
 # Local web-server / tooling logs
 *.log
+
+# Python (convert.py / generate_sample.py tooling)
+__pycache__/
+*.pyc
