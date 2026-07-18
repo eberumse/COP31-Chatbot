@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<!--
+  COP31 BRIEF BUDDY — SELF-CONTAINED MOCKUP  ·  FOR CHATGPT ENTERPRISE
+  Single runnable file: CSS + JS + sample data are all inlined (no fetch, no
+  service worker). Open it, or paste it into ChatGPT Enterprise Canvas to preview.
+  ALL CONTENT IS FICTIONAL DUMMY DATA FOR TESTING — not a real government product.
+-->
+
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>COP31 Brief Buddy</title>
+  <meta name="description" content="At-a-glance ministerial briefings for COP31 — next engagement, talking points, and a source-grounded ask." />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Brief Buddy" />
+  <style>
+/* ============================================================
+   COP31 Brief Buddy — professional, theme-switchable UI
+   Light (daylight/corporate) + Dark (command console).
+   No external fonts or dependencies.
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+/* Dark theme only. */
+:root {
+  --bg:        #0b1220;
+  --bg-grad:   radial-gradient(1100px 520px at 12% -12%, rgba(56,189,248,.12), transparent 56%),
+               radial-gradient(1000px 480px at 100% -6%, rgba(129,140,248,.12), transparent 52%),
+               radial-gradient(900px 520px at 50% 108%, rgba(45,212,191,.08), transparent 60%);
+  --panel:     rgba(17,26,44,.82);
+  --panel-2:   rgba(20,31,54,.66);
+  --inset:     rgba(3,9,20,.34);
+  --line:      rgba(148,171,204,.16);
+  --line-2:    rgba(148,171,204,.28);
+  --text:      #e9f1fb;
+  --muted:     #9fb1c8;
+  --faint:     #6b7d95;
+  --accent:    #38bdf8;   /* sky */
+  --accent-2:  #a78bfa;
+  --accent-soft:rgba(56,189,248,.12);
+  --accent-ink:#bde9ff;
+  --warn:      #f4b45f;
+  --warn-soft: rgba(244,180,95,.12);
+  --danger:    #fb7185;
+  --danger-soft:rgba(251,113,133,.12);
+  --ok:        #34d399;
+  --ok-soft:   rgba(52,211,153,.12);
+  --shadow:    0 1px 2px rgba(0,0,0,.3), 0 24px 60px rgba(0,0,0,.42);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.34);
+  --r-xl: 22px; --r-lg: 18px; --r-md: 14px; --r-sm: 10px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Helvetica Neue", sans-serif;
+  --nav-w: 88px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg-grad), var(--bg);
+  background-attachment: fixed;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+svg { width: 20px; height: 20px; display: block; }
+[data-icon] { display: inline-flex; }
+
+/* ---------- App shell ---------- */
+.app { display: grid; grid-template-columns: var(--nav-w) minmax(0, 1fr); min-height: 100vh; }
+
+.sidenav {
+  position: sticky; top: 0; height: 100vh; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: calc(16px + var(--safe-t)) 12px 16px;
+  border-right: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  backdrop-filter: blur(20px);
+}
+.brand { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 10px; background: linear-gradient(145deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow-sm); color: #fff; font-weight: 800; font-size: 18px; letter-spacing: -.01em; }
+.nav { display: flex; flex-direction: column; gap: 6px; width: 100%; align-items: center; }
+.nav-foot { margin-top: auto; display: flex; flex-direction: column; gap: 6px; align-items: center; width: 100%; }
+.nav-btn {
+  width: 64px; padding: 9px 4px; border: 1px solid transparent; border-radius: 15px;
+  background: transparent; color: var(--muted);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; transition: 140ms ease;
+}
+.nav-btn em { font-style: normal; }
+.nav-btn:hover { color: var(--text); background: color-mix(in srgb, var(--muted) 12%, transparent); }
+.nav-btn.active { color: var(--accent-ink); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 32%, transparent); }
+
+/* ---------- Main ---------- */
+.main { min-width: 0; padding: calc(20px + var(--safe-t)) clamp(16px, 3.4vw, 40px) 60px; max-width: 1180px; }
+.topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 20px; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--faint);
+}
+.eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 5px color-mix(in srgb, var(--ok) 16%, transparent); }
+h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02em; line-height: 1.05; }
+.updated-line { font-size: 12.5px; color: var(--faint); margin-top: 8px; }
+.subhead { color: var(--muted); margin-top: 6px; font-size: 14px; }
+.topbar-side { display: flex; gap: 8px; align-items: center; flex: none; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px; box-shadow: var(--shadow-sm);
+}
+.pill.clock { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 600; }
+.pill.icon-only { padding: 9px; }
+.pill svg { width: 18px; height: 18px; }
+
+/* ---------- Banner ---------- */
+.banner {
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+  background: var(--warn-soft); color: var(--warn); border: 1px solid color-mix(in srgb, var(--warn) 28%, transparent);
+  font-size: 12.5px; font-weight: 600; padding: 8px 14px; border-radius: 12px; margin-bottom: 18px;
+}
+
+/* ---------- Panes ---------- */
+.pane { display: none; }
+.pane.active { display: block; animation: fade .2s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Panels / cards ---------- */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-xl); box-shadow: var(--shadow); }
+[data-theme="dark"] .panel { backdrop-filter: blur(20px); }
+.card-pad { padding: clamp(18px, 2.4vw, 26px); }
+
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); gap: 18px; align-items: start; }
+.rail { display: grid; gap: 16px; }
+
+/* ---------- Next hero ---------- */
+.hero { position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(600px 260px at 88% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%); pointer-events: none; }
+.hero-in { position: relative; z-index: 1; }
+.kicker { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.count-badge {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 750;
+  padding: 7px 12px; border-radius: 999px; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+.type-chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; padding: 6px 10px; border-radius: 999px; color: var(--accent-ink);
+  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.hero-time { margin-top: 16px; font-size: clamp(44px, 8vw, 68px); font-weight: 800; letter-spacing: -.04em; line-height: .95; font-variant-numeric: tabular-nums; }
+.hero-when { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.hero-title { margin-top: 14px; font-size: clamp(21px, 3vw, 28px); font-weight: 750; letter-spacing: -.02em; line-height: 1.15; }
+.meta-strip { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.meta-item { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border-radius: 11px; border: 1px solid var(--line); background: var(--inset); color: var(--muted); font-size: 13px; }
+.meta-item svg { width: 16px; height: 16px; }
+
+.flag-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 16px; }
+.flag {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 650;
+  padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); background: var(--inset);
+}
+.flag.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); background: var(--danger-soft); }
+.flag.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 30%, transparent); background: var(--warn-soft); }
+
+.blocktitle { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.blocktitle svg { width: 17px; height: 17px; color: var(--accent); }
+
+.objective { margin-top: 22px; padding: 16px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); background: var(--accent-soft); }
+.objective .blocktitle { color: var(--accent-ink); }
+.objective p { color: var(--text); font-size: 15.5px; line-height: 1.5; margin-top: 8px; }
+
+.talk-list { display: grid; gap: 10px; margin-top: 14px; }
+.talk { display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 12px; padding: 14px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--panel-2); }
+.talk-n { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; color: #fff; font-weight: 750; font-size: 14px; background: linear-gradient(145deg, var(--accent), var(--accent-2)); }
+.talk-c { color: var(--text); font-size: 15px; line-height: 1.45; }
+.src-row { margin-top: 9px; display: flex; gap: 6px; flex-wrap: wrap; }
+.src { font-size: 11.5px; color: var(--muted); padding: 4px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--inset); }
+.src.web { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 30%, transparent); background: color-mix(in srgb, var(--accent-2) 8%, transparent); }
+
+.callout { margin-top: 14px; padding: 14px 16px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--panel-2); }
+.callout.danger { border-color: color-mix(in srgb, var(--danger) 30%, transparent); background: var(--danger-soft); }
+.callout .blocktitle { color: var(--danger); }
+.callout.warn { border-color: color-mix(in srgb, var(--warn) 30%, transparent); background: var(--warn-soft); }
+.callout.warn .blocktitle { color: var(--warn); }
+.callout p { margin-top: 7px; font-size: 14.5px; line-height: 1.5; }
+.callout.danger p { color: var(--danger); font-weight: 550; }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 15px; border-radius: 13px;
+  border: 1px solid var(--line-2); background: var(--panel); color: var(--text); font-weight: 650; font-size: 14px;
+  transition: 140ms ease; box-shadow: var(--shadow-sm); text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 40%, var(--line-2)); }
+.btn.primary { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.btn.ghost { background: transparent; box-shadow: none; }
+.btn svg { width: 17px; height: 17px; }
+.btn.wide { width: 100%; }
+
+/* ---------- Counterpart ---------- */
+.cp-top { display: grid; grid-template-columns: 72px minmax(0,1fr); gap: 14px; align-items: center; }
+.cp-photo { width: 72px; height: 72px; border-radius: 20px; overflow: hidden; border: 1px solid var(--line-2); background: var(--inset); position: relative; }
+.cp-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cp-photo .flagbadge { position: absolute; right: -3px; bottom: -3px; font-size: 17px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+.cp-avatar { width: 72px; height: 72px; border-radius: 20px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 22px; position: relative; }
+.cp-avatar .flagbadge { position: absolute; right: -3px; bottom: -3px; font-size: 17px; }
+.cp-name { font-size: 18px; font-weight: 750; letter-spacing: -.01em; }
+.cp-role { color: var(--muted); font-size: 13px; margin-top: 3px; line-height: 1.35; }
+.photo-note { font-size: 10.5px; color: var(--faint); margin-top: 6px; font-style: italic; }
+.cp-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 16px; }
+.mini { padding: 12px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--inset); }
+.mini .l { color: var(--faint); font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; }
+.mini .v { color: var(--text); font-size: 13px; margin-top: 5px; line-height: 1.4; }
+.public-ctx { margin-top: 14px; padding: 13px 14px; border-radius: var(--r-md); border: 1px solid color-mix(in srgb, var(--accent-2) 24%, transparent); background: color-mix(in srgb, var(--accent-2) 7%, transparent); }
+.public-ctx .blocktitle { color: var(--accent-2); }
+.public-ctx p { font-size: 13px; line-height: 1.5; margin-top: 7px; color: var(--text); }
+
+/* ---------- Schedule ---------- */
+.section-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.section-h h2 { font-size: 19px; letter-spacing: -.01em; }
+.section-h .hint { color: var(--faint); font-size: 12.5px; }
+.timeline { display: grid; gap: 10px; }
+.tl-item {
+  width: 100%; text-align: left; color: inherit; display: grid; grid-template-columns: 64px minmax(0,1fr) auto; gap: 14px; align-items: center;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--panel); box-shadow: var(--shadow-sm); transition: 140ms ease; position: relative;
+}
+.tl-item.linkable:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); transform: translateY(-1px); }
+.tl-item.now { border-color: color-mix(in srgb, var(--accent) 55%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 26%, transparent), var(--shadow-sm); }
+.tl-item.done { opacity: .6; }
+.tl-time { font-weight: 750; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tl-time .e { display: block; font-size: 11.5px; color: var(--faint); font-weight: 500; }
+.tl-title { font-size: 15px; font-weight: 640; line-height: 1.25; }
+.tl-sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.tag { font-size: 10.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 3px 7px; border-radius: 7px; background: var(--accent-soft); color: var(--accent-ink); white-space: nowrap; }
+.tag.completed { background: var(--ok-soft); color: var(--ok); }
+.tag.next { background: var(--accent-soft); color: var(--accent-ink); }
+.tag.upcoming { background: color-mix(in srgb, var(--accent-2) 12%, transparent); color: var(--accent-2); }
+.tl-chev { color: var(--faint); }
+
+/* ---------- Briefs (list + detail) ---------- */
+.split { display: grid; grid-template-columns: minmax(260px, .82fr) minmax(0, 1.18fr); gap: 18px; align-items: start; }
+.pick-list { display: grid; gap: 10px; }
+.pick {
+  width: 100%; text-align: left; color: inherit; padding: 14px; border: 1px solid var(--line); border-radius: var(--r-lg);
+  background: var(--panel); box-shadow: var(--shadow-sm); display: grid; gap: 6px; transition: 140ms ease;
+}
+.pick:hover { border-color: color-mix(in srgb, var(--accent) 36%, var(--line)); }
+.pick.active { border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: var(--accent-soft); }
+.pick .row { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.pick .t { font-weight: 700; font-size: 14.5px; }
+.pick .m { color: var(--muted); font-size: 12.5px; }
+
+.detail-title { font-size: clamp(20px, 2.6vw, 26px); font-weight: 760; letter-spacing: -.02em; margin-top: 4px; }
+.ai-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--accent-ink); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent); padding: 5px 9px; border-radius: 999px; }
+.changed-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.date-chip { font-variant-numeric: tabular-nums; font-weight: 650; color: var(--text); background: var(--inset); border: 1px solid var(--line); padding: 3px 8px; border-radius: 8px; }
+.arrow-i { color: var(--faint); }
+.change-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.change-list li { position: relative; padding-left: 20px; font-size: 14px; color: var(--text); line-height: 1.45; }
+.change-list li::before { content: ""; position: absolute; left: 4px; top: 8px; width: 7px; height: 7px; border-radius: 3px; background: var(--accent); }
+
+/* ---------- Ask ---------- */
+.ask-wrap { display: grid; grid-template-columns: minmax(0,.92fr) minmax(0,1.08fr); gap: 18px; align-items: start; }
+.field-label { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+.select {
+  width: 100%; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--line-2);
+  background: var(--panel); color: var(--text); font-size: 14.5px; font-weight: 600; box-shadow: var(--shadow-sm);
+  appearance: none; background-image: none;
+}
+.explain { font-size: 12.5px; color: var(--muted); margin-top: 12px; line-height: 1.5; padding: 11px 13px; border-radius: var(--r-md); background: var(--inset); border: 1px solid var(--line); }
+.explain b { color: var(--text); }
+.mode-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.mode {
+  padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); background: var(--panel);
+  font-size: 12.5px; font-weight: 600; transition: 120ms ease;
+}
+.mode:hover { color: var(--text); }
+.mode.active { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.ask-box { display: flex; gap: 10px; margin-top: 16px; }
+.ask-input { flex: 1; min-width: 0; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--panel); color: var(--text); outline: none; box-shadow: var(--shadow-sm); }
+.ask-input:focus { border-color: color-mix(in srgb, var(--accent) 50%, var(--line-2)); }
+.ask-send { padding: 12px 16px; border-radius: var(--r-md); border: 0; color: #fff; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.brief-select { margin-bottom: 16px; }
+.ask-block { margin-top: 4px; }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.suggest { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); background: var(--panel); font-size: 12.5px; font-weight: 600; transition: 120ms ease; }
+.suggest:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 40%, var(--line-2)); }
+
+/* ---------- Week calendar ---------- */
+.wk-legend { font-weight: 500; color: var(--faint); text-transform: none; letter-spacing: 0; margin-left: 6px; }
+.week-strip { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 14px; -webkit-overflow-scrolling: touch; }
+.day-chip { flex: 0 0 auto; min-width: 62px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--muted); box-shadow: var(--shadow-sm); transition: 140ms ease; }
+.day-chip:hover { border-color: color-mix(in srgb, var(--accent) 36%, var(--line)); }
+.day-chip.today { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.day-chip.sel { background: linear-gradient(145deg, var(--accent), var(--accent-2)); color: #fff; border-color: transparent; }
+.dc-dow { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .85; }
+.dc-num { font-size: 20px; font-weight: 800; line-height: 1.05; }
+.dc-mon { font-size: 10.5px; opacity: .8; }
+.dc-meta { font-size: 10px; margin-top: 3px; opacity: .8; white-space: nowrap; }
+.dc-meta b { color: var(--accent); }
+.day-chip.sel .dc-meta b { color: #fff; }
+.empty-day { color: var(--faint); font-size: 14px; padding: 20px 4px; }
+
+/* ---------- Anticipated questions (enriched) ---------- */
+.aq-intro { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+.aq-list { display: grid; gap: 12px; margin-top: 14px; }
+.aq { padding: 15px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--panel-2); }
+.aq-q { font-size: 15.5px; font-weight: 700; color: var(--text); }
+.aq-why { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 8px; display: flex; gap: 8px; align-items: flex-start; }
+.aq-consider { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 11px; }
+.aq-clabel { font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); margin-bottom: 8px; }
+.aq-c { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.45; margin-bottom: 8px; }
+.aq-c:last-child { margin-bottom: 0; }
+.aq-c .src-tag, .aq-why .src-tag { flex: none; margin-top: 1px; }
+
+/* Source tags: INTERNAL (cleared) vs PUBLIC (indicative) */
+.src-tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .04em; padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
+.src-tag.int { color: var(--ok); background: var(--ok-soft); border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent); }
+.src-tag.pub { color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent-2) 30%, transparent); }
+.src-tag.both { color: var(--warn); background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); }
+
+/* Ask answer variants */
+.answer.public { border-color: color-mix(in srgb, var(--accent-2) 30%, transparent); background: color-mix(in srgb, var(--accent-2) 8%, transparent); }
+.answer.none { border-color: var(--line-2); background: var(--panel-2); }
+.answer {
+  margin-top: 16px; border-radius: var(--r-lg); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  background: var(--accent-soft); padding: 18px; min-height: 200px;
+}
+.answer.unsupported { border-color: color-mix(in srgb, var(--warn) 34%, transparent); background: var(--warn-soft); }
+.answer .atag { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; color: var(--accent-ink); border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent); background: var(--panel); padding: 6px 10px; border-radius: 999px; margin-bottom: 12px; }
+.answer.unsupported .atag { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 34%, transparent); }
+.answer p { color: var(--text); line-height: 1.55; margin-top: 8px; }
+.answer ul { margin: 10px 0 0; padding-left: 18px; }
+.answer li { color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+.answer .basis { color: var(--muted); font-size: 12.5px; }
+.qa-list { display: grid; gap: 10px; margin-top: 12px; }
+.qa { padding: 13px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--panel); }
+.qa strong { display: block; font-size: 14px; color: var(--text); margin-bottom: 5px; }
+.qa span { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+
+/* ---------- Settings ---------- */
+.set-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+.set-card { padding: 18px; }
+.set-card h3 { font-size: 15px; margin-bottom: 4px; }
+.set-card p { color: var(--muted); font-size: 13px; margin-bottom: 12px; line-height: 1.45; }
+.seg { display: inline-flex; padding: 4px; border-radius: 12px; background: var(--inset); border: 1px solid var(--line); gap: 4px; }
+.seg button { padding: 8px 14px; border-radius: 9px; border: 0; background: transparent; color: var(--muted); font-weight: 650; font-size: 13.5px; }
+.seg button.on { background: var(--panel); color: var(--text); box-shadow: var(--shadow-sm); }
+.kv { font-size: 13px; color: var(--muted); } .kv b { color: var(--text); }
+.input-inline { width: 100%; padding: 11px 12px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--panel); color: var(--text); font-size: 14px; }
+.hintline { font-size: 12px; color: var(--faint); text-align: center; margin-top: 14px; }
+
+/* ---------- Mobile nav ---------- */
+.mobilenav { display: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidenav { display: none; }
+  .main { padding: calc(16px + var(--safe-t)) 16px calc(90px + var(--safe-b)); max-width: 640px; margin: 0 auto; }
+  .grid-2, .split, .ask-wrap, .set-grid { grid-template-columns: 1fr; }
+  .topbar-side .pill.clock { display: none; }
+  .mobilenav {
+    position: fixed; left: 10px; right: 10px; bottom: calc(8px + var(--safe-b)); z-index: 40;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 7px;
+    border: 1px solid var(--line); border-radius: 20px; background: color-mix(in srgb, var(--panel) 92%, transparent);
+    backdrop-filter: blur(20px); box-shadow: var(--shadow);
+  }
+  .mobilenav .nav-btn { width: 100%; padding: 7px 2px; border-radius: 13px; }
+}
+@media (max-width: 380px) { .hero-time { font-size: 42px; } }
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- Desktop side nav -->
+    <aside class="sidenav">
+      <nav class="nav">
+        <button class="nav-btn active" data-tab="next"><span data-icon="target"></span><em>Next</em></button>
+        <button class="nav-btn" data-tab="schedule"><span data-icon="calendar"></span><em>Schedule</em></button>
+        <button class="nav-btn" data-tab="briefs"><span data-icon="doc"></span><em>Briefs</em></button>
+      </nav>
+      <div class="nav-foot">
+        <button class="nav-btn" data-tab="settings"><span data-icon="gear"></span><em>Settings</em></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-lead">
+          <div class="eyebrow"><span class="dot"></span><span id="confLabel">COP31</span> · <span id="classLabel">Sample</span></div>
+          <h1 id="appTitle">COP31 Brief Buddy</h1>
+          <p class="subhead" id="principalLabel"></p>
+        </div>
+        <div class="topbar-side">
+          <span class="pill clock"><span data-icon="clock"></span><span id="liveClock">--:--</span></span>
+        </div>
+      </header>
+
+      <div id="banner" class="banner" hidden></div>
+
+      <section id="tab-next" class="pane active"><div id="next-root"></div></section>
+      <section id="tab-schedule" class="pane"><div id="schedule-root"></div></section>
+      <section id="tab-briefs" class="pane"><div id="briefs-root"></div></section>
+      <section id="tab-settings" class="pane"><div id="settings-root"></div></section>
+    </main>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobilenav">
+    <button class="nav-btn active" data-tab="next"><span data-icon="target"></span><em>Next</em></button>
+    <button class="nav-btn" data-tab="schedule"><span data-icon="calendar"></span><em>Schedule</em></button>
+    <button class="nav-btn" data-tab="briefs"><span data-icon="doc"></span><em>Briefs</em></button>
+    <button class="nav-btn" data-tab="settings"><span data-icon="gear"></span><em>Settings</em></button>
+  </nav>
+
+  <input type="file" id="fileInput" accept="application/json,.json" hidden />
+  <script>window.__BRIEF_DATA__={"meta": {"app": "COP31 Brief Buddy", "schemaVersion": 3, "isSampleData": true, "conference": "COP31 — UN Climate Change Conference", "host": "Blue Zone", "classification": "DUMMY — Unclassified sample", "updatedLabel": "Sample data · generated from source PDFs by convert.py", "principal": {"name": "Minister for Sustainability & Environment", "delegation": "Singapore", "flag": "🇸🇬"}, "note": "ALL CONTENT IS FICTIONAL DUMMY DATA FOR TESTING. Counterparts are anonymised ('Minister A'). Generated from the source PDFs in docs/sample-source/ by convert.py."}, "schedule": [{"date": "2026-11-09", "time": "13:00", "end": "16:00", "title": "Arrival / travel to host city", "venue": "In transit", "engagementId": null}, {"date": "2026-11-09", "time": "17:00", "end": "18:00", "title": "Delegation Strategy Session", "venue": "Delegation Office", "engagementId": "strategy-session"}, {"date": "2026-11-10", "time": "08:30", "end": "09:00", "title": "Morning delegation huddle", "venue": "Delegation Office", "engagementId": null}, {"date": "2026-11-10", "time": "11:00", "end": "11:15", "title": "National Statement — High-Level Segment", "venue": "Plenary Hall", "engagementId": "national-statement"}, {"date": "2026-11-10", "time": "13:00", "end": "14:00", "title": "Working lunch", "venue": "Delegates Lounge", "engagementId": null}, {"date": "2026-11-10", "time": "15:00", "end": "15:30", "title": "Bilateral with Country A", "venue": "Bilateral Room 4B, Level 2", "engagementId": "bilateral-country-a"}, {"date": "2026-11-11", "time": "09:30", "end": "10:30", "title": "High Ambition Coalition Meeting", "venue": "Room Amazonia 1", "engagementId": "coalition-hac"}, {"date": "2026-11-11", "time": "14:00", "end": "15:00", "title": "Climate Finance Roundtable", "venue": "Summit Studio C", "engagementId": "roundtable-finance"}, {"date": "2026-11-12", "time": "09:00", "end": "09:20", "title": "Delegation huddle", "venue": "Delegation Office", "engagementId": null}, {"date": "2026-11-12", "time": "10:30", "end": "11:00", "title": "Bilateral with Country B", "venue": "Bilateral Room 3A", "engagementId": "bilateral-country-b"}, {"date": "2026-11-12", "time": "17:30", "end": "17:45", "title": "Media Doorstop", "venue": "Press Zone, Level 1", "engagementId": "media-doorstop"}, {"date": "2026-11-13", "time": "09:30", "end": "10:30", "title": "Ministerial Consultation on Article 6", "venue": "Room Tapajós", "engagementId": "article6-ministerial"}, {"date": "2026-11-13", "time": "15:00", "end": "15:45", "title": "Youth & Civil Society Dialogue", "venue": "Action Hub", "engagementId": "youth-dialogue"}, {"date": "2026-11-14", "time": "12:00", "end": "12:20", "title": "Closing Plenary Intervention", "venue": "Plenary Hall", "engagementId": "closing-plenary"}, {"date": "2026-11-14", "time": "16:00", "end": "17:00", "title": "Departure", "venue": "In transit", "engagementId": null}], "engagements": [{"id": "strategy-session", "start": "2026-11-09T17:00:00", "end": "2026-11-09T18:00:00", "title": "Delegation Strategy Session", "type": "Internal", "venue": "Delegation Office", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-09", "objective": "Align the delegation on red lines, priorities and division of labour before the high-level segment opens.", "tone": "Focused, decisive — listen, then direct.", "flags": ["Internal", "Sets the week's red lines"], "counterpart": {"initials": "SD", "name": "Singapore delegation", "role": "Negotiators & senior officials", "country": "Singapore", "flag": "🇸🇬", "portfolio": "Negotiation teams across all tracks", "photo": null, "photoNote": "", "publicBackground": "Internal coordination meeting; not on the public record.", "publicSources": []}, "sayThis": ["Confirm the three priorities: mitigation ambition, Article 6 operational rules, and adaptation support for partners.", "Restate the red line: no new quantified finance commitments beyond the approved envelope.", "Assign leads for each negotiating track and set the evening report-back time."], "watchPoint": "Don't let the session reopen settled internal positions — this is for direction, not debate.", "ifAsked": "Track leads hold delegated authority within the agreed mandate; escalate anything beyond it to the Minister.", "anticipated": [{"q": "If finance talks stall, is there flexibility on the timing of disbursement language?", "why": "Finance is expected to be the week's crunch point and officials will want a fallback; the mandate fixes the envelope but is silent on sequencing.", "whyTag": "INTERNAL", "consider": [{"text": "Envelope is fixed; sequencing/timing may be explored at officials level without new commitment.", "source": "INTERNAL"}, {"text": "Any movement returns to the Minister before it is tabled.", "source": "INTERNAL"}]}, {"q": "How should the delegation handle media approaches during the week?", "why": "High-visibility week; consistent lines prevent mixed messaging across the team.", "whyTag": "INTERNAL", "consider": [{"text": "All media routed through the approved doorstop lines; no freelancing.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["agenda", "priorities", "what is singapore focusing on", "focus"], "text": "Singapore's public COP31 priorities centre on practical implementation, high-integrity carbon markets and support for the region."}], "sources": ["brief_01_strategy-session.pdf · p.1", "brief_01_strategy-session.pdf · p.2"], "briefFile": "docs/sample-source/brief_01_strategy-session.pdf"}, {"id": "national-statement", "start": "2026-11-10T11:00:00", "end": "2026-11-10T11:15:00", "title": "National Statement — High-Level Segment", "type": "Plenary", "venue": "Plenary Hall", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-10", "objective": "Deliver Singapore's national statement: ambitious, implementable, and partnership-focused.", "tone": "Statesmanlike, warm, forward-looking.", "flags": ["Public remarks", "On the record", "Verbatim where marked"], "counterpart": {"initials": "AD", "name": "All delegations", "role": "High-Level Segment audience", "country": "Multilateral setting", "flag": "🌐", "portfolio": "Heads of delegation and ministers", "photo": null, "photoNote": "", "publicBackground": "Open, broadcast session; all statements are on the public record.", "publicSources": ["Conference public programme"]}, "sayThis": ["Open by welcoming the presidency's leadership and progress since COP30. (deliver warmly)", "State Singapore's commitment to net zero by 2050 and to high-integrity carbon markets. (deliver exactly)", "Call for outcomes that are ambitious and implementable for small and developing states.", "Reaffirm Singapore's support to regional partners on adaptation and capacity."], "watchPoint": "Do not deviate from the cleared text on the net-zero and carbon-market lines.", "ifAsked": "Detailed positions are for the negotiating tracks; the statement reflects Singapore's settled national position.", "anticipated": [{"q": "Will Singapore raise its 2030 target?", "why": "Media and NGOs press all speakers on headline ambition; the statement mentions 2050 but not a revised 2030 figure.", "whyTag": "BOTH", "consider": [{"text": "Stay with the cleared NDC language; no new target announced here.", "source": "INTERNAL"}, {"text": "Public commentary is pushing all parties for stronger 2030 numbers (indicative).", "source": "PUBLIC"}]}, {"q": "Is Singapore's net-zero pledge conditional?", "why": "The credibility of pledges is a running public theme this week.", "whyTag": "PUBLIC", "consider": [{"text": "Use the cleared framing: firm goal, pragmatic pathway.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["target", "2030", "ndc", "pledge", "net zero"], "text": "Singapore has publicly committed to net zero by 2050; specifics of any updated near-term target should come from cleared statements, not speculation."}], "sources": ["brief_02_national-statement.pdf · p.1", "brief_02_national-statement.pdf · p.2"], "briefFile": "docs/sample-source/brief_02_national-statement.pdf"}, {"id": "bilateral-country-a", "start": "2026-11-10T15:00:00", "end": "2026-11-10T15:30:00", "title": "Bilateral with Country A", "type": "Bilateral", "venue": "Bilateral Room 4B, Level 2", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-10", "objective": "Secure Country A's support for balanced finance text and confirm alignment on carbon markets.", "tone": "Warm, purposeful, no new concessions.", "flags": ["Negotiation-sensitive", "Media-sensitive", "No new concessions"], "counterpart": {"initials": "MA", "name": "H.E. Minister A", "role": "Minister for Climate and Energy", "country": "Country A (major developed economy)", "flag": "🏳️", "portfolio": "Climate negotiations · energy transition · finance", "photo": null, "photoNote": "", "publicBackground": "Country A's Minister for Climate and Energy since 2024; delivered Country A's national statement at the opening of the high-level segment.", "publicSources": ["Official ministry biography", "Opening national statement"]}, "sayThis": ["Thank Minister A for Country A's constructive role in the coalition this week.", "Reaffirm Singapore supports ambition where implementation flexibility is preserved.", "Ask Country A to back the balanced finance formulation and not reopen settled text.", "Confirm both sides want operational Article 6 rules concluded here."], "watchPoint": "Do not commit to any finance figure or language beyond the approved envelope.", "ifAsked": "Officials can continue technical talks, but new language must preserve implementation flexibility.", "anticipated": [{"q": "Would Singapore support a higher collective finance goal if Country A moves first?", "why": "Minister A publicly tied ambition to 'predictable finance' in Country A's opening statement; the brief flags finance as the active crunch, so a direct linkage is likely.", "whyTag": "BOTH", "consider": [{"text": "No new finance commitment beyond the approved envelope.", "source": "INTERNAL"}, {"text": "If pressed, officials may continue technical talks preserving flexibility.", "source": "INTERNAL"}, {"text": "Country A has framed ambition as conditional on predictable support (indicative).", "source": "PUBLIC"}]}, {"q": "Can Singapore and Country A issue a joint line on carbon markets?", "why": "Both delegations have signalled carbon markets as a priority; a joint signal could add momentum.", "whyTag": "BOTH", "consider": [{"text": "Openness in principle to a short joint line, subject to clearance — do not agree wording on the spot.", "source": "INTERNAL"}]}, {"q": "How does Singapore define 'implementation flexibility'?", "why": "The phrase recurs in both the cleared brief and Minister A's public remarks, so a clarification request is likely.", "whyTag": "BOTH", "consider": [{"text": "Use the framing already in the brief; avoid a new definition that could be quoted.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["block", "blocking", "stall", "who", "which country", "which countries"], "text": "Public commentary points to friction between major economies over the finance text, but attributions are contested and unconfirmed."}, {"keywords": ["profile", "who is minister a", "background", "counterpart"], "text": "Minister A has held the Climate and Energy portfolio since 2024 and spoke at the opening — see the Public background panel."}], "sources": ["brief_03_bilateral-country-a.pdf · p.1", "brief_03_bilateral-country-a.pdf · p.2"], "briefFile": "docs/sample-source/brief_03_bilateral-country-a.pdf"}, {"id": "coalition-hac", "start": "2026-11-11T09:30:00", "end": "2026-11-11T10:30:00", "title": "High Ambition Coalition Meeting", "type": "Coalition", "venue": "Room Amazonia 1", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-11", "objective": "Coordinate a joint coalition push to hold the line on mitigation ambition in the cover text.", "tone": "Collegial, energising, unity-focused.", "flags": ["Coalition-sensitive", "Hold the line"], "counterpart": {"initials": "HC", "name": "High Ambition Coalition", "role": "Coalition ministers", "country": "Cross-regional grouping", "flag": "🌐", "portfolio": "Mitigation ambition · cover decision", "photo": null, "photoNote": "", "publicBackground": "A cross-regional grouping that periodically issues joint ministerial statements; membership and statements are public.", "publicSources": ["Coalition joint statements"]}, "sayThis": ["Reaffirm Singapore's commitment to keeping 1.5°C within reach in the cover text.", "Propose the coalition speak with one voice against watering down mitigation language.", "Offer Singapore to help bridge with implementation-focused parties."], "watchPoint": "Avoid signing onto any collective finance pledge on the coalition's behalf.", "ifAsked": "Singapore supports ambition and can help broker, but keeps its own finance envelope.", "anticipated": [{"q": "Will Singapore co-sign a coalition statement calling for a finance figure?", "why": "Coalition statements often bundle mitigation with finance asks; the mandate keeps the two separate.", "whyTag": "BOTH", "consider": [{"text": "Can co-sign mitigation-ambition language; not a specific finance figure.", "source": "INTERNAL"}, {"text": "Coalition partners have publicly pushed headline finance numbers (indicative).", "source": "PUBLIC"}]}, {"q": "Can Singapore bridge to the parties resisting stronger language?", "why": "Singapore's 'ambition + implementation' framing positions it as a natural bridge-builder.", "whyTag": "INTERNAL", "consider": [{"text": "Offer good offices; report any opening to the delegation lead.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["coalition", "who is in", "members", "statement"], "text": "The High Ambition Coalition periodically issues public joint statements; treat specific membership claims as indicative unless confirmed."}], "sources": ["brief_04_coalition-hac.pdf · p.1", "brief_04_coalition-hac.pdf · p.2"], "briefFile": "docs/sample-source/brief_04_coalition-hac.pdf"}, {"id": "roundtable-finance", "start": "2026-11-11T14:00:00", "end": "2026-11-11T15:00:00", "title": "Climate Finance Roundtable", "type": "Roundtable", "venue": "Summit Studio C", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-11", "objective": "Position Singapore as a practical partner for scalable, high-integrity transition finance.", "tone": "Pragmatic, partnership-oriented.", "flags": ["Finance-sensitive", "Partner ask likely"], "counterpart": {"initials": "FM", "name": "Finance ministers & MDBs", "role": "Roundtable participants", "country": "Multilateral", "flag": "🌐", "portfolio": "Transition finance · blended finance · MDB reform", "photo": null, "photoNote": "", "publicBackground": "Multilateral development banks and finance ministries publish transition- finance materials and communiqués publicly.", "publicSources": ["Partner public communiqués"]}, "sayThis": ["Stress credible taxonomies and high-integrity transition plans as the basis for scaling finance.", "Point to regional capacity-building and blended finance as concrete collaboration.", "Invite partners into a practical post-COP workplan."], "watchPoint": "Do not announce new funding or quantified commitments.", "ifAsked": "Offer officials-level follow-up on specific project pipelines.", "anticipated": [{"q": "Is Singapore pledging capital today?", "why": "The roundtable format and partners' 'mobilisation' calls may invite a quantified pledge.", "whyTag": "BOTH", "consider": [{"text": "No new funding or numbers today; offer pipeline follow-up.", "source": "INTERNAL"}, {"text": "Partners publicly emphasise mobilising investment at scale (indicative).", "source": "PUBLIC"}]}, {"q": "What makes a transition plan 'credible' to Singapore?", "why": "The integrity of transition finance is a repeated public theme.", "whyTag": "PUBLIC", "consider": [{"text": "Use the brief's language on credible taxonomies and high-integrity plans.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["how much", "number", "figure", "amount", "pledge", "committed"], "text": "Public materials discuss large mobilisation targets in general terms, but no figure is agreed — do not cite a number."}], "sources": ["brief_05_roundtable-finance.pdf · p.1", "brief_05_roundtable-finance.pdf · p.2"], "briefFile": "docs/sample-source/brief_05_roundtable-finance.pdf"}, {"id": "bilateral-country-b", "start": "2026-11-12T10:30:00", "end": "2026-11-12T11:00:00", "title": "Bilateral with Country B", "type": "Bilateral", "venue": "Bilateral Room 3A", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-12", "objective": "Deepen practical cooperation with Country B on adaptation and capacity, and hear its priorities for the endgame.", "tone": "Friendly, attentive, solutions-focused.", "flags": ["Relationship-building", "Adaptation focus"], "counterpart": {"initials": "MB", "name": "H.E. Minister B", "role": "Minister for Environment", "country": "Country B (regional partner)", "flag": "🏳️", "portfolio": "Adaptation · disaster resilience · capacity building", "photo": null, "photoNote": "", "publicBackground": "Country B's Minister for Environment; has spoken publicly on adaptation finance and regional resilience.", "publicSources": ["Ministry statements", "Regional forum remarks"]}, "sayThis": ["Acknowledge Country B's leadership on adaptation and regional resilience.", "Offer to expand Singapore's capacity-building and training cooperation.", "Explore where Singapore and Country B can align in the final package."], "watchPoint": "Do not raise expectations of direct bilateral financial transfers.", "ifAsked": "Cooperation is through capacity, training and knowledge-sharing, not direct transfers.", "anticipated": [{"q": "Will Singapore support Country B's call for a dedicated adaptation finance goal?", "why": "Minister B has publicly championed adaptation finance; the mandate supports adaptation in principle but not a specific new goal.", "whyTag": "BOTH", "consider": [{"text": "Support adaptation prominence in the text; no endorsement of a specific new finance goal.", "source": "INTERNAL"}, {"text": "Country B has publicly pressed for stronger adaptation finance (indicative).", "source": "PUBLIC"}]}, {"q": "Can Singapore scale up training programmes for Country B?", "why": "Capacity-building is a concrete, low-risk deliverable both sides value.", "whyTag": "INTERNAL", "consider": [{"text": "Signal willingness to expand existing programmes; specifics via officials.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["adaptation", "finance", "who is minister b", "background"], "text": "Country B has publicly emphasised adaptation and regional resilience — see the Public background panel; treat specifics as indicative."}], "sources": ["brief_06_bilateral-country-b.pdf · p.1", "brief_06_bilateral-country-b.pdf · p.2"], "briefFile": "docs/sample-source/brief_06_bilateral-country-b.pdf"}, {"id": "media-doorstop", "start": "2026-11-12T17:30:00", "end": "2026-11-12T17:45:00", "title": "Media Doorstop", "type": "Media", "venue": "Press Zone, Level 1", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-12", "objective": "Keep public messaging disciplined and avoid previewing negotiation trade-offs.", "tone": "Clear, calm, non-speculative.", "flags": ["Media-sensitive", "Use approved lines"], "counterpart": {"initials": "AM", "name": "Accredited media", "role": "Conference press pool", "country": "International media", "flag": "🌐", "portfolio": "Public communications", "photo": null, "photoNote": "", "publicBackground": "Conference press pool; briefings and coverage are publicly available.", "publicSources": ["Conference press schedule"]}, "sayThis": ["Negotiations are active and Singapore is engaging constructively.", "A good outcome must be ambitious and implementable.", "Singapore will keep working with partners towards consensus."], "watchPoint": "Do not comment on private bilateral discussions.", "ifAsked": "You will not characterise other parties' positions while talks are ongoing.", "anticipated": [{"q": "Which country is blocking the deal?", "why": "Media are actively seeking attribution as the conference nears its endgame.", "whyTag": "PUBLIC", "consider": [{"text": "Do not characterise other parties' positions while talks continue.", "source": "INTERNAL"}, {"text": "Reports name various parties, but none is confirmed — don't repeat speculation (indicative).", "source": "PUBLIC"}]}, {"q": "What will Singapore concede to get a deal?", "why": "Trade-offs are live and journalists will probe for a headline.", "whyTag": "INTERNAL", "consider": [{"text": "Stay on approved lines; do not preview trade-offs.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["block", "blocking", "which country", "who"], "text": "Various parties have been named in public commentary as holding out, but nothing is confirmed — avoid repeating it."}], "sources": ["brief_07_media-doorstop.pdf · p.1", "brief_07_media-doorstop.pdf · p.2"], "briefFile": "docs/sample-source/brief_07_media-doorstop.pdf"}, {"id": "article6-ministerial", "start": "2026-11-13T09:30:00", "end": "2026-11-13T10:30:00", "title": "Ministerial Consultation on Article 6", "type": "Roundtable", "venue": "Room Tapajós", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-13", "objective": "Push to conclude operational Article 6 rules with high environmental integrity.", "tone": "Technical but accessible, constructive, firm on integrity.", "flags": ["Technical", "Integrity red line"], "counterpart": {"initials": "AP", "name": "Article 6 co-facilitators & parties", "role": "Ministerial consultation", "country": "Multilateral", "flag": "🌐", "portfolio": "Carbon markets · Article 6.2 / 6.4", "photo": null, "photoNote": "", "publicBackground": "Ministerial consultations on Article 6 are convened by the presidency; outcomes are reported publicly.", "publicSources": ["Presidency consultation notes"]}, "sayThis": ["Support concluding the Article 6.4 mechanism rules at this COP.", "Insist on robust integrity: no double counting, transparent registries.", "Offer Singapore's experience with bilateral carbon-credit agreements as a practical model."], "watchPoint": "Do not trade away integrity safeguards for a faster deal.", "ifAsked": "Singapore wants an outcome, but only one that protects environmental integrity.", "anticipated": [{"q": "Will Singapore accept weaker integrity provisions to land a deal?", "why": "Endgame pressure to close often targets integrity 'flexibilities'; Singapore's red line is integrity.", "whyTag": "BOTH", "consider": [{"text": "Integrity safeguards are a red line; no trade for speed.", "source": "INTERNAL"}, {"text": "Some parties publicly favour more flexible rules (indicative).", "source": "PUBLIC"}]}, {"q": "Can Singapore share its bilateral carbon-agreement model?", "why": "Singapore has publicly signed several bilateral carbon-credit agreements, making it a credible reference point.", "whyTag": "BOTH", "consider": [{"text": "Offer to share experience; keep it illustrative, not prescriptive.", "source": "INTERNAL"}, {"text": "Singapore's bilateral carbon agreements are matters of public record (indicative).", "source": "PUBLIC"}]}], "publicInfo": [{"keywords": ["article 6", "carbon markets", "credits", "double counting"], "text": "Singapore has publicly pursued high-integrity bilateral carbon-credit agreements; treat specifics of any live text as indicative."}], "sources": ["brief_08_article6-ministerial.pdf · p.1", "brief_08_article6-ministerial.pdf · p.2"], "briefFile": "docs/sample-source/brief_08_article6-ministerial.pdf"}, {"id": "youth-dialogue", "start": "2026-11-13T15:00:00", "end": "2026-11-13T15:45:00", "title": "Youth & Civil Society Dialogue", "type": "Roundtable", "venue": "Action Hub", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-13", "objective": "Listen to youth and civil society, and show Singapore takes intergenerational concerns seriously.", "tone": "Open, humble, genuine.", "flags": ["Public-facing", "Authenticity matters"], "counterpart": {"initials": "YS", "name": "Youth & civil society", "role": "YOUNGO & NGO representatives", "country": "Global constituencies", "flag": "🌐", "portfolio": "Intergenerational equity · climate justice", "photo": null, "photoNote": "", "publicBackground": "Youth (YOUNGO) and NGO constituencies engage publicly at COP; their asks are on the record.", "publicSources": ["Constituency public statements"]}, "sayThis": ["Thank participants and acknowledge the urgency they bring.", "Share what Singapore is doing on green jobs and climate education.", "Commit to continue engaging youth voices after the conference."], "watchPoint": "Avoid defensive or dismissive language, even if challenged sharply.", "ifAsked": "Where Singapore hasn't moved as fast, say so honestly and explain the pathway.", "anticipated": [{"q": "Why isn't Singapore phasing out fossil fuels faster?", "why": "A standard, pointed civil-society challenge; expect it directly.", "whyTag": "PUBLIC", "consider": [{"text": "Be honest about constraints; point to the credible pathway and carbon markets.", "source": "INTERNAL"}, {"text": "Youth groups publicly call for faster fossil phase-out (indicative).", "source": "PUBLIC"}]}, {"q": "Will you commit to a formal youth seat in the delegation?", "why": "Youth constituencies increasingly ask for structural inclusion.", "whyTag": "BOTH", "consider": [{"text": "No new commitment on the spot; note willingness to explore engagement channels.", "source": "INTERNAL"}]}], "publicInfo": [{"keywords": ["fossil", "phase out", "youth", "commitment"], "text": "Youth and NGO constituencies publicly press for faster action; Singapore's public position stresses a credible, just pathway."}], "sources": ["brief_09_youth-dialogue.pdf · p.1", "brief_09_youth-dialogue.pdf · p.2"], "briefFile": "docs/sample-source/brief_09_youth-dialogue.pdf"}, {"id": "closing-plenary", "start": "2026-11-14T12:00:00", "end": "2026-11-14T12:20:00", "title": "Closing Plenary Intervention", "type": "Plenary", "venue": "Plenary Hall", "classification": "DUMMY — Unclassified sample", "updated": "2026-11-14", "objective": "Deliver a closing intervention supporting a balanced final package that is ambitious and implementable.", "tone": "Confident, steady, constructive.", "flags": ["Public remarks", "High visibility", "Endgame"], "counterpart": {"initials": "AD", "name": "All delegations", "role": "Closing plenary", "country": "Multilateral setting", "flag": "🌐", "portfolio": "Heads of delegation and ministers", "photo": null, "photoNote": "", "publicBackground": "Closing plenary; all interventions are on the public record and broadcast.", "publicSources": ["Conference public programme"]}, "sayThis": ["Welcome the overnight progress and thank the presidency for bridge-building.", "Stress that durable outcomes need practical implementation pathways.", "Signal readiness to join consensus on a balanced final package."], "watchPoint": "Avoid naming any delegation as blocking progress.", "ifAsked": "Refer drafting detail to negotiators; restate support for a balanced package.", "anticipated": [{"q": "Are you signalling that ambition should be diluted?", "why": "The emphasis on implementation can be read publicly as softening ambition.", "whyTag": "PUBLIC", "consider": [{"text": "Ambition and implementation are complementary, not a trade-off.", "source": "INTERNAL"}]}, {"q": "Will Singapore block consensus if the package is weak?", "why": "Endgame interventions are scrutinised for veto signals.", "whyTag": "BOTH", "consider": [{"text": "Emphasise constructive intent; do not signal a veto.", "source": "INTERNAL"}, {"text": "Media watch closing statements for blocking signals (indicative).", "source": "PUBLIC"}]}], "publicInfo": [{"keywords": ["block", "blocking", "veto", "which country", "who"], "text": "Commentary speculates about which parties are holding out, but attributions are unverified — avoid repeating them on the record."}], "sources": ["brief_10_closing-plenary.pdf · p.1", "brief_10_closing-plenary.pdf · p.2"], "briefFile": "docs/sample-source/brief_10_closing-plenary.pdf"}]};</script>
+  <script>
+/* ============================================================
+   COP31 Brief Buddy — app logic (vanilla JS, no dependencies)
+   Dark theme only. Tabs: Next · Schedule · Briefs · Settings.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var LS_DATA = "bb:data", LS_DEMO = "bb:demoTime";
+
+  var ICONS = {
+    target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+    calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 9.5h18"/></svg>',
+    doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7.5 3.5h7l4 4V20A1.5 1.5 0 0 1 17 21.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7.5 3.5Z"/><path d="M14.5 3.5V8h4M9 12.5h6M9 16h6"/></svg>',
+    chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.4A8.5 8.5 0 1 1 21 12Z"/><path d="M9.2 9.4a3 3 0 0 1 5.5 1.5c0 2.1-2.7 2.3-2.7 4M12 18h.01"/></svg>',
+    gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 6.1 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 4.5 13H4.3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 6 6.1l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 11 4.5V4.3a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 17.9 6l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 2.1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>',
+    pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v5c0 4.5 2.8 8.4 7 10 4.2-1.6 7-5.5 7-10V6l-7-3Z"/><path d="m9.5 12 1.7 1.7 3.5-4"/></svg>',
+    alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2.8 20h18.4L12 3Z"/><path d="M12 9.5v5M12 17.5h.01"/></svg>',
+    challenge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14 14 4l6 6-10 10H4v-6Z"/><path d="M13 5l6 6"/></svg>',
+    web:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+    chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg>',
+    upload:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5"/><path d="M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg>',
+    download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5"/><path d="M5 18.5h14"/></svg>',
+    refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 1 0-.8 4.5"/><path d="M20 4v6h-6"/></svg>',
+    spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/></svg>'
+  };
+
+  var state = {
+    data: null, isSample: true, view: "next",
+    briefId: null, selDate: null,
+    demoTime: localStorage.getItem(LS_DEMO) || "", simulated: false
+  };
+
+  /* ---------- helpers ---------- */
+  function ic(n){ return ICONS[n] || ""; }
+  function el(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function pad(n){ return (n<10?"0":"")+n; }
+  var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  function parseDT(s){ if(!s) return null; if(/^\d{4}-\d{2}-\d{2}$/.test(s)){ var p=s.split("-"); return new Date(+p[0],+p[1]-1,+p[2]); } return new Date(s); }
+  function fmtClock(d){ return pad(d.getHours())+":"+pad(d.getMinutes()); }
+  function fmtDate(s){ var d=parseDT(s); return d? d.getDate()+" "+MON[d.getMonth()]+" "+d.getFullYear() : ""; }
+  function fmtDay(d){ return DOW[d.getDay()]+" "+d.getDate()+" "+MON[d.getMonth()]; }
+
+  function engagements(){ return (state.data&&state.data.engagements)||[]; }
+  function byId(id){ return engagements().filter(function(e){return e.id===id;})[0]; }
+  function ymd(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function hms(t){ return (t&&t.length===5)?t+":00":(t||"00:00:00"); }
+  function itemDT(it){ return new Date(it.date+"T"+hms(it.time)); }
+  function itemEnd(it){ return new Date(it.date+"T"+hms(it.end||it.time)); }
+  function scheduleDates(){ var seen={},out=[]; (state.data&&state.data.schedule||[]).forEach(function(it){ if(it.date&&!seen[it.date]){seen[it.date]=1;out.push(it.date);} }); return out.sort(); }
+
+  function effectiveNow(){
+    state.simulated=false;
+    if(state.demoTime) return new Date(state.demoTime);
+    var real=new Date(), eng=engagements();
+    if(state.isSample && eng.length){
+      var first=new Date(eng[0].start), last=new Date(eng[eng.length-1].end||eng[eng.length-1].start);
+      if(real<new Date(first.getTime()-3*3600000) || real>last){ state.simulated=true; return new Date(first.getTime()-10*60000); }
+    }
+    return real;
+  }
+  function nextEngagement(){
+    var now=effectiveNow(), eng=engagements().slice().sort(function(a,b){return new Date(a.start)-new Date(b.start);});
+    var ongoing=null, next=null;
+    for(var i=0;i<eng.length;i++){ var s=new Date(eng[i].start), e=new Date(eng[i].end||eng[i].start);
+      if(s<=now && now<e && !ongoing) ongoing=eng[i];
+      if(s>now && !next) next=eng[i]; }
+    return { now:now, hero: ongoing||next||eng[eng.length-1]||null, ongoing:ongoing };
+  }
+  function countdown(target, now){
+    var m=Math.round((target-now)/60000);
+    if(m<=0) return "Happening now";
+    if(m<60) return "in "+m+" min";
+    if(m<12*60) return "in "+Math.floor(m/60)+"h "+(m%60)+"m";
+    if(target.toDateString()===now.toDateString()) return "today "+fmtClock(target);
+    if(new Date(now.getTime()+864e5).toDateString()===target.toDateString()) return "tomorrow "+fmtClock(target);
+    return fmtDay(target)+" "+fmtClock(target);
+  }
+
+  /* ---------- data ---------- */
+  function normalize(d){ d=d||{}; d.meta=d.meta||{}; d.engagements=(d.engagements||[]).slice().sort(function(a,b){return new Date(a.start)-new Date(b.start);}); d.schedule=d.schedule||[]; return d; }
+  function loadData(){
+    var stored=localStorage.getItem(LS_DATA);
+    if(stored){ try{ var d=JSON.parse(stored); state.data=normalize(d); state.isSample=!!(d.meta&&d.meta.isSampleData); afterLoad(); return Promise.resolve(); }catch(e){} }
+    return Promise.resolve(window.__BRIEF_DATA__).then(function(d){
+      state.data=normalize(d); state.isSample=!(d.meta&&d.meta.isSampleData===false); afterLoad();
+    }).catch(function(){ state.data={meta:{},engagements:[],schedule:[]}; afterLoad(); });
+  }
+  function afterLoad(){ var f=nextEngagement().hero||engagements()[0]; state.briefId=f?f.id:null; }
+
+  /* ---------- shared brief pieces ---------- */
+  function counterpartHTML(e){
+    var c=e.counterpart||{}; var media;
+    if(c.photo){ media='<div class="cp-photo"><img src="'+esc(c.photo)+'" alt="">'+(c.flag?'<span class="flagbadge">'+esc(c.flag)+'</span>':'')+'</div>'; }
+    else { media='<div class="cp-avatar" style="background:linear-gradient(145deg,var(--accent),var(--accent-2))">'+esc(c.initials||"—")+(c.flag?'<span class="flagbadge">'+esc(c.flag)+'</span>':'')+'</div>'; }
+    return '<div class="panel card-pad">'
+      + '<div class="cp-top">'+media+'<div><div class="cp-name">'+esc(c.name||"")+'</div><div class="cp-role">'+esc(c.role||"")+(c.country?" · "+esc(c.country):"")+'</div>'
+      + (c.photo&&c.photoNote?'<div class="photo-note">'+esc(c.photoNote)+'</div>':'')+'</div></div>'
+      + '<div class="cp-mini"><div class="mini"><div class="l">Portfolio</div><div class="v">'+esc(c.portfolio||"—")+'</div></div>'
+      + '<div class="mini"><div class="l">Setting</div><div class="v">'+esc(c.country||"—")+'</div></div></div>'
+      + (c.publicBackground?'<div class="public-ctx"><div class="blocktitle">'+ic("web")+' Public background</div><p>'+esc(c.publicBackground)+'</p>'
+        + '<div class="src-row">'+(c.publicSources||[]).map(function(s){return '<span class="src web">'+esc(s)+'</span>';}).join("")+'</div></div>':'')
+      + '</div>';
+  }
+  function talkingHTML(e){
+    return '<div class="talk-list">'+(e.sayThis||[]).map(function(line,i){
+      var s=e.sources&&e.sources.length?e.sources[Math.min(i,e.sources.length-1)]:null;
+      return '<div class="talk"><div class="talk-n">'+(i+1)+'</div><div><div class="talk-c">'+esc(line)+'</div>'
+        + (s?'<div class="src-row"><span class="src">'+esc(s)+'</span></div>':'')+'</div></div>';
+    }).join("")+'</div>';
+  }
+  function watchHTML(e){
+    return '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>';
+  }
+  function tagCls(t){ return /public/i.test(t)?"pub":(/both/i.test(t)?"both":"int"); }
+  function srcTag(t){ return '<span class="src-tag '+tagCls(t)+'">'+esc(t)+'</span>'; }
+  function anticipatedHTML(e){
+    var items=e.anticipated||[];
+    if(!items.length) return "";
+    return '<div style="margin-top:24px" class="blocktitle">'+ic("challenge")+' Anticipated questions</div>'
+      + '<p class="aq-intro">Questions beyond your brief that could come up — tailored to the counterpart and recent developments. '
+      + '<span class="src-tag int">INTERNAL</span> = your cleared brief · <span class="src-tag pub">PUBLIC</span> = indicative, from public sources.</p>'
+      + '<div class="aq-list">'+items.map(function(a){
+          return '<div class="aq"><div class="aq-q">'+esc(a.q)+'</div>'
+            + '<div class="aq-why">'+srcTag(a.whyTag||"INTERNAL")+' <span>'+esc(a.why)+'</span></div>'
+            + ((a.consider&&a.consider.length)?'<div class="aq-consider"><div class="aq-clabel">Points to consider</div>'
+                + a.consider.map(function(c){ return '<div class="aq-c">'+srcTag(c.source||"INTERNAL")+'<span>'+esc(c.text)+'</span></div>'; }).join("")+'</div>':'')
+            + '</div>';
+        }).join("")+'</div>';
+  }
+
+  /* ---------- NEXT ---------- */
+  function renderNext(){
+    var n=nextEngagement(), e=n.hero;
+    if(!e){ el("next-root").innerHTML='<div class="panel card-pad"><h2>No engagements</h2></div>'; return; }
+    var start=new Date(e.start), end=new Date(e.end||e.start);
+    var label = n.ongoing===e ? "Happening now" : countdown(start, n.now);
+    var flags=(e.flags||[]).map(function(f){ var cls=/no |avoid|sensitive|red/i.test(f)?(/media|public/i.test(f)?"warn":"danger"):""; return '<span class="flag '+cls+'">'+esc(f)+'</span>'; }).join("");
+
+    var main='<div class="panel card-pad hero"><div class="hero-in">'
+      + '<div class="kicker"><span class="count-badge">'+ic("clock")+esc(label)+'</span><span class="type-chip">'+ic("shield")+esc(e.type)+'</span></div>'
+      + '<div class="hero-time">'+fmtClock(start)+'–'+fmtClock(end)+'</div>'
+      + '<div class="hero-when">'+esc(fmtDay(start))+(e.updated?' · Updated '+esc(fmtDate(e.updated)):'')+'</div>'
+      + '<div class="hero-title">'+esc(e.title)+'</div>'
+      + '<div class="meta-strip"><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span></div>'
+      + (flags?'<div class="flag-row">'+flags+'</div>':'')
+      + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
+      + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points</div>'+talkingHTML(e)
+      + watchHTML(e)
+      + '<div class="btn-row"><button class="btn primary" data-openbrief="'+esc(e.id)+'">'+ic("doc")+' Open full brief</button></div>'
+      + '</div></div>';
+    var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
+    el("next-root").innerHTML='<div class="grid-2">'+main+rail+'</div>';
+  }
+
+  /* ---------- SCHEDULE (week calendar) ---------- */
+  function renderSchedule(){
+    var now=effectiveNow(), dates=scheduleDates(), todayStr=ymd(now);
+    if(!state.selDate || dates.indexOf(state.selDate)<0) state.selDate = dates.indexOf(todayStr)>=0?todayStr:(dates[0]||todayStr);
+    var nextId=(nextEngagement().hero||{}).id;
+    var strip=dates.map(function(d){
+      var dt=parseDT(d), count=(state.data.schedule||[]).filter(function(x){return x.date===d;}).length;
+      var briefed=(state.data.schedule||[]).some(function(x){return x.date===d && x.engagementId;});
+      return '<button class="day-chip'+(d===state.selDate?" sel":"")+(d===todayStr?" today":"")+'" data-day="'+esc(d)+'">'
+        + '<span class="dc-dow">'+DOW[dt.getDay()]+'</span><span class="dc-num">'+dt.getDate()+'</span><span class="dc-mon">'+MON[dt.getMonth()]+'</span>'
+        + '<span class="dc-meta">'+(count?count+(count===1?" item":" items"):"—")+(briefed?' <b>•</b>':'')+'</span></button>';
+    }).join("");
+    var items=(state.data.schedule||[]).filter(function(x){return x.date===state.selDate;}).sort(function(a,b){return itemDT(a)-itemDT(b);});
+    var rows=items.map(function(it){
+      var s=itemDT(it), en=itemEnd(it), link=!!it.engagementId;
+      var isNow=s<=now&&now<en, isDone=en<now&&!isNow, isNext=it.engagementId&&it.engagementId===nextId&&!isNow;
+      var tag=isNow?'<span class="tag next">Now</span>':isNext?'<span class="tag next">Next</span>':isDone?'<span class="tag completed">Done</span>':'<span class="tag upcoming">Upcoming</span>';
+      var sub=link?'<span class="tag">'+esc(engType(it.engagementId))+'</span>'+esc(it.venue):esc(it.venue);
+      return '<'+(link?'button':'div')+' class="tl-item'+(link?' linkable':'')+(isNow?' now':'')+(isDone?' done':'')+'"'+(link?' data-openbrief="'+esc(it.engagementId)+'"':'')+'>'
+        + '<div class="tl-time">'+esc(it.time)+'<span class="e">'+esc(it.end||"")+'</span></div>'
+        + '<div><div class="tl-title">'+esc(it.title)+'</div><div class="tl-sub">'+sub+'</div></div>'
+        + '<div>'+tag+(link?'<span class="tl-chev">'+ic("chevron")+'</span>':'')+'</div>'
+        + '</'+(link?'button':'div')+'>';
+    }).join("") || '<div class="empty-day">Nothing scheduled for this day.</div>';
+    el("schedule-root").innerHTML='<div class="field-label">This week <span class="wk-legend">• = has a full brief</span></div><div class="week-strip">'+strip+'</div>'
+      + '<div class="section-h"><h2>'+esc(fmtDay(parseDT(state.selDate)))+'</h2><span class="hint">Tap a briefed item for the full brief</span></div>'
+      + '<div class="timeline">'+rows+'</div>';
+  }
+  function engType(id){ var e=byId(id); return e?e.type:""; }
+
+  /* ---------- BRIEFS (merged: read + ask) ---------- */
+  var SUGGEST = ["Give me the 20-second version", "Which country is blocking the deal?", "What must I avoid?"];
+  function renderBriefs(){
+    var e=byId(state.briefId)||engagements()[0];
+    if(!e){ el("briefs-root").innerHTML='<div class="panel card-pad">No briefs loaded.</div>'; return; }
+    var start=new Date(e.start);
+    var opts=engagements().map(function(x){ return '<option value="'+esc(x.id)+'"'+(x.id===e.id?" selected":"")+'>'+esc(x.title)+' — '+esc(x.type)+'</option>'; }).join("");
+    var selector='<div class="panel card-pad brief-select"><div class="field-label">Choose a meeting</div><select class="select" id="briefSelect">'+opts+'</select></div>';
+
+    var chips=SUGGEST.map(function(q){ return '<button class="suggest" data-ask="'+esc(q)+'">'+esc(q)+'</button>'; }).join("");
+    var main='<div class="panel card-pad">'
+      + '<span class="ai-tag">'+ic("spark")+' AI-generated · source-grounded</span>'
+      + '<div class="detail-title">'+esc(e.title)+'</div>'
+      + '<div class="meta-strip"><span class="meta-item">'+ic("clock")+esc(fmtClock(start))+'–'+esc(fmtClock(new Date(e.end)))+'</span><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span><span class="type-chip">'+esc(e.type)+'</span></div>'
+      + (e.updated?'<div class="updated-line">Updated '+esc(fmtDate(e.updated))+'</div>':'')
+      + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
+      + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
+      + watchHTML(e)
+      + anticipatedHTML(e)
+      + '<div class="ask-block"><div style="margin-top:24px" class="blocktitle">'+ic("chat")+' Ask about this brief</div>'
+      + '<p class="aq-intro">Answers come from your cleared brief first; only if it’s not covered will a tentative public note appear.</p>'
+      + '<div class="chip-row">'+chips+'</div>'
+      + '<div class="ask-box"><input class="ask-input" id="askInput" placeholder="Ask anything about this brief…"><button class="ask-send" id="askSend">Ask</button></div>'
+      + '<div id="answer-slot"></div></div>'
+      + '</div>';
+    var rail='<div class="rail">'+counterpartHTML(e)+'</div>';
+    el("briefs-root").innerHTML=selector+'<div class="grid-2">'+main+rail+'</div>';
+  }
+  function answer(q){
+    var e=byId(state.briefId)||engagements()[0]; if(!e) return;
+    var lower=(q||"").toLowerCase().trim(); if(!lower) return;
+    var cls="", tag="", body="", srcs="";
+    // 1) Brief-first: watch point / commitments / numbers -> cleared guardrail
+    if(/avoid|watch|risk|careful|red.?line|sensitiv|commit|concession|promise|new (finance|money|fund)|pledge|guarantee|how much|number|figure|announce/.test(lower)){
+      tag=srcTag("INTERNAL")+' From your brief';
+      body='<p><strong>Watch point:</strong> '+esc(e.watchPoint)+'</p>'+(e.ifAsked?'<p>If pressed, you can say: '+esc(e.ifAsked)+'</p>':'');
+      srcs=briefSrcRow(e);
+    }
+    // 2) Brief-first: summary / talking points / objective
+    else if(/summar|gist|20.?sec|short|main point|talking point|what.*(say|convey|tell)|objective|aim|goal|key point/.test(lower)){
+      tag=srcTag("INTERNAL")+' From your brief';
+      body='<p>'+esc(e.objective)+'</p><ul>'+(e.sayThis||[]).map(function(x){return "<li>"+esc(x)+"</li>";}).join("")+'</ul><p class="basis" style="margin-top:8px">Tone: '+esc(e.tone)+'</p>';
+      srcs=briefSrcRow(e);
+    }
+    else {
+      // 3) Out of brief -> tentative public, else not covered
+      var pi=(e.publicInfo||[]).filter(function(p){ return (p.keywords||[]).some(function(k){ return lower.indexOf(k)>=0; }); })[0];
+      if(pi){ cls="public"; tag=srcTag("PUBLIC")+' Public domain · indicative';
+        body='<p><em>Not in your cleared brief.</em> Publicly — and to be treated as indicative only — '+esc(pi.text)+'</p><p class="basis" style="margin-top:8px">Tentative; verify before use and lean on your cleared brief and negotiators.</p>';
+      } else { cls="none"; tag=srcTag("INTERNAL")+' Not in your cleared brief';
+        body='<p>Your cleared brief doesn’t cover that, and there’s nothing reliable in the loaded public notes.</p><p class="basis" style="margin-top:8px">Check with your negotiators. (In production, your enterprise AI would attempt a fuller, sourced answer here.)</p>';
+      }
+    }
+    var slot=el("answer-slot"); if(slot) slot.innerHTML='<div class="answer '+cls+'"><span class="atag">'+tag+'</span>'+body+srcs+'</div>';
+  }
+  function briefSrcRow(e){ return '<div class="src-row" style="margin-top:14px">'+(e.sources||[]).map(function(s){return '<span class="src">'+esc(s)+'</span>';}).join("")+'</div>'; }
+
+  /* ---------- SETTINGS ---------- */
+  function renderSettings(){
+    var m=(state.data&&state.data.meta)||{}, count=engagements().length;
+    var standalone=window.navigator.standalone||matchMedia("(display-mode: standalone)").matches;
+    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    el("settings-root").innerHTML='<div class="set-grid">'
+      + '<div class="panel card-pad set-card"><h3>Add to Home Screen</h3>'+(standalone?'<p>✅ Installed — running as an app.</p>':isIOS?'<p>In Safari: <b>Share</b> → <b>Add to Home Screen</b>. Then it opens like an app.</p>':'<p>Use the browser menu → <b>Install app</b> / <b>Add to Home Screen</b>.</p>')+'</div>'
+      + '<div class="panel card-pad set-card"><h3>Briefing content</h3><p class="kv"><b>Source:</b> '+(state.isSample?"Sample data (built in)":"Imported file")+'<br><b>Engagements:</b> '+count+(m.updatedLabel?'<br><b>Updated:</b> '+esc(m.updatedLabel):"")+'</p>'
+      + '<div class="btn-row"><button class="btn primary" id="btnImport">'+ic("upload")+' Import file</button><button class="btn" id="btnExport">'+ic("download")+' Export</button>'+(state.isSample?"":'<button class="btn ghost" id="btnReset">'+ic("refresh")+' Reset to sample</button>')+'</div></div>'
+      + '<div class="panel card-pad set-card"><h3>Simulate a time <span style="color:var(--faint);font-weight:400">(demo)</span></h3><p>Preview any moment of the conference day.</p>'
+      + '<input type="datetime-local" class="input-inline" id="demoInput" value="'+esc(toLocalInput(state.demoTime?new Date(state.demoTime):effectiveNow()))+'">'
+      + '<div class="btn-row"><button class="btn" id="btnSetTime">Use this time</button>'+(state.demoTime?'<button class="btn ghost" id="btnRealTime">Use real time</button>':"")+'</div></div>'
+      + '<div class="panel card-pad set-card"><h3>About</h3><p class="kv">COP31 Brief Buddy · fictional dummy data for testing. Content you import stays in this browser on this device. '+esc(m.classification||"")+'</p></div>'
+      + '</div><div class="hintline">COP31 Brief Buddy</div>';
+  }
+  function toLocalInput(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes()); }
+
+  /* ---------- chrome / nav ---------- */
+  function updateChrome(){
+    var m=(state.data&&state.data.meta)||{};
+    el("confLabel").textContent = (m.conference||"COP31").split("—")[0].trim();
+    el("classLabel").textContent = state.isSample ? "Sample" : "Live";
+    el("appTitle").textContent = m.app||"COP31 Brief Buddy";
+    var p=m.principal||{};
+    el("principalLabel").textContent = p.name ? (p.flag?p.flag+" ":"")+p.name+(p.delegation?" · "+p.delegation:"") : "";
+    var msgs=[]; if(state.isSample) msgs.push("⚠︎ Sample data — fictional, for testing"); if(state.demoTime) msgs.push("⏱ Simulated time"); else if(state.simulated) msgs.push("🔬 Preview (simulated time)");
+    var b=el("banner"); if(msgs.length){ b.hidden=false; b.textContent=msgs.join("   ·   "); } else b.hidden=true;
+    document.querySelectorAll("[data-tab]").forEach(function(btn){ btn.classList.toggle("active", btn.dataset.tab===state.view); });
+  }
+  function go(view){ state.view=view; document.querySelectorAll(".pane").forEach(function(s){ s.classList.toggle("active", s.id==="tab-"+view); });
+    if(view==="next") renderNext(); else if(view==="schedule") renderSchedule(); else if(view==="briefs") renderBriefs(); else if(view==="settings") renderSettings();
+    updateChrome(); window.scrollTo(0,0);
+  }
+
+  /* ---------- import/export ---------- */
+  function importFile(file){ var r=new FileReader(); r.onload=function(){ try{ var d=JSON.parse(r.result); if(!d.engagements||!Array.isArray(d.engagements)) throw new Error("no engagements"); localStorage.setItem(LS_DATA,r.result); state.data=normalize(d); state.isSample=!!(d.meta&&d.meta.isSampleData); state.demoTime=""; localStorage.removeItem(LS_DEMO); afterLoad(); go("next"); }catch(err){ alert("Could not read that file — it must be a Brief Buddy JSON with an \"engagements\" list.\n\n("+err.message+")"); } }; r.readAsText(file); }
+  function exportData(){ var t=JSON.stringify(state.data,null,2), b=new Blob([t],{type:"application/json"}), a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="brief-buddy.json"; document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400); }
+  function resetSample(){ localStorage.removeItem(LS_DATA); state.demoTime=""; localStorage.removeItem(LS_DEMO); loadData().then(function(){ go("next"); }); }
+
+  /* ---------- events ---------- */
+  document.addEventListener("click", function(ev){
+    var t=ev.target;
+    var tab=t.closest("[data-tab]"); if(tab){ go(tab.dataset.tab); return; }
+    var dc=t.closest("[data-day]"); if(dc){ state.selDate=dc.dataset.day; renderSchedule(); return; }
+    var ob=t.closest("[data-openbrief]"); if(ob){ state.briefId=ob.dataset.openbrief; go("briefs"); return; }
+    var sg=t.closest("[data-ask]"); if(sg){ var qi=el("askInput"); if(qi) qi.value=sg.dataset.ask; answer(sg.dataset.ask); return; }
+    var id=(t.closest("button")||{}).id;
+    if(id==="btnImport") el("fileInput").click();
+    else if(id==="btnExport") exportData();
+    else if(id==="btnReset"){ if(confirm("Replace current content with the built-in sample?")) resetSample(); }
+    else if(id==="btnSetTime"){ var v=el("demoInput").value; if(v){ state.demoTime=new Date(v).toISOString(); localStorage.setItem(LS_DEMO,state.demoTime); go("next"); } }
+    else if(id==="btnRealTime"){ state.demoTime=""; localStorage.removeItem(LS_DEMO); go("next"); }
+    else if(id==="askSend"){ answer(el("askInput").value); }
+  });
+  document.addEventListener("change", function(ev){ if(ev.target.id==="briefSelect"){ state.briefId=ev.target.value; renderBriefs(); } });
+  document.addEventListener("keydown", function(ev){ if(ev.key==="Enter" && ev.target.id==="askInput"){ answer(ev.target.value); } });
+  el("fileInput").addEventListener("change", function(ev){ if(ev.target.files&&ev.target.files[0]) importFile(ev.target.files[0]); ev.target.value=""; });
+  window.addEventListener("online", updateChrome); window.addEventListener("offline", updateChrome);
+  setInterval(function(){ var c=el("liveClock"); if(c) c.textContent=fmtClock(new Date()); if(state.view==="next"&&!state.demoTime) renderNext(); }, 30000);
+
+  if(false){ /* service worker disabled in the single-file build */
+    var _hadCtrl = !!navigator.serviceWorker.controller, _reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function(){ if(_reloading || !_hadCtrl) return; _reloading = true; location.reload(); });
+    window.addEventListener("load", function(){ navigator.serviceWorker.register("service-worker.js").catch(function(){}); });
+  }
+
+  /* ---------- boot ---------- */
+  function setupIcons(){ document.querySelectorAll("[data-icon]").forEach(function(n){ n.innerHTML=ic(n.dataset.icon); }); }
+  loadData().then(function(){
+    setupIcons();
+    el("liveClock").textContent=fmtClock(new Date());
+    var h=(location.hash||"").replace(/^#/,"");
+    if(h==="ask") state.view="briefs";
+    else if(["schedule","briefs","settings","next"].indexOf(h)>=0) state.view=h;
+    else if(h.indexOf("e/")===0){ state.briefId=h.slice(2); state.view="briefs"; }
+    go(state.view);
+  });
+})();
+
+</script>
+</body>
+</html>
