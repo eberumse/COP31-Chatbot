@@ -1,6 +1,6 @@
 /* Service worker — NETWORK-FIRST so new deploys show up immediately when online,
    with a cached copy as offline fallback. Bump CACHE on each shell change. */
-var CACHE = "briefbuddy-v3";
+var CACHE = "briefbuddy-v4";
 var SHELL = [
   ".",
   "index.html",

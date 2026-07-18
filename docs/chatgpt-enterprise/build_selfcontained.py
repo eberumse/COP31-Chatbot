@@ -37,6 +37,12 @@ manifest = rd("manifest.webmanifest")
 data_raw = rd("data/schedule.sample.json")
 data = json.loads(data_raw)
 
+# The brief PDFs are NOT bundled into the single file, so hide the in-app
+# "View full brief (PDF)" button in the standalone preview by clearing briefFile
+# on the inlined copy. (The live app + SAMPLE-DATA json keep the real paths.)
+for _e in data.get("engagements", []):
+    _e["briefFile"] = ""
+
 # ---- 1) self-contained HTML -------------------------------------------------
 # a) app.js: read data from an inlined global instead of fetch(); disable SW
 app_inline = app.replace(

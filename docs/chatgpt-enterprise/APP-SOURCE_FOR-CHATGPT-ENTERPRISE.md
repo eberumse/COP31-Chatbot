@@ -254,6 +254,11 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
 .callout.warn .blocktitle { color: var(--warn); }
 .callout p { margin-top: 7px; font-size: 14.5px; line-height: 1.5; }
 .callout.danger p { color: var(--danger); font-weight: 550; }
+.briefdoc { margin-top: 22px; padding: 14px 16px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--panel-2); }
+.briefdoc-sub { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.pdf-embed:empty { display: none; }
+.pdf-embed { margin-top: 14px; }
+.pdf-frame { display: block; width: 100%; height: 68vh; min-height: 420px; border: 1px solid var(--line); border-radius: var(--r-lg); background: #fff; }
 
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 .btn {
@@ -562,6 +567,28 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
   function watchHTML(e){
     return '<div class="callout danger"><div class="blocktitle">'+ic("alert")+' Watch point</div><p>'+esc(e.watchPoint)+'</p></div>';
   }
+  function briefFileHTML(e){
+    var f=e.briefFile; if(!f || f==="#") return "";
+    return '<div class="briefdoc">'
+      + '<div class="blocktitle">'+ic("doc")+' Full brief (PDF)</div>'
+      + '<p class="briefdoc-sub">The full document this summary was drawn from — open it to refer to the original.</p>'
+      + '<div class="btn-row">'
+      +   '<button class="btn primary" data-viewpdf="'+esc(f)+'">'+ic("doc")+' <span class="vlbl">View full brief</span></button>'
+      +   '<a class="btn ghost" href="'+esc(f)+'" target="_blank" rel="noopener">'+ic("download")+' Open in new tab</a>'
+      + '</div>'
+      + '<div class="pdf-embed" id="pdfEmbed"></div>'
+    + '</div>';
+  }
+  function togglePdf(btn){
+    var slot=el("pdfEmbed"); if(!slot) return;
+    var lbl=btn.querySelector(".vlbl");
+    if(slot.getAttribute("data-open")==="1"){
+      slot.innerHTML=""; slot.removeAttribute("data-open"); if(lbl) lbl.textContent="View full brief";
+    } else {
+      slot.innerHTML='<iframe class="pdf-frame" src="'+esc(btn.dataset.viewpdf)+'" title="Full brief PDF" loading="lazy"></iframe>';
+      slot.setAttribute("data-open","1"); if(lbl) lbl.textContent="Hide full brief";
+    }
+  }
   function tagCls(t){ return /public/i.test(t)?"pub":(/both/i.test(t)?"both":"int"); }
   function srcTag(t){ return '<span class="src-tag '+tagCls(t)+'">'+esc(t)+'</span>'; }
   function anticipatedHTML(e){
@@ -649,6 +676,7 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
       + '<div class="meta-strip"><span class="meta-item">'+ic("clock")+esc(fmtClock(start))+'–'+esc(fmtClock(new Date(e.end)))+'</span><span class="meta-item">'+ic("pin")+esc(e.venue)+'</span><span class="type-chip">'+esc(e.type)+'</span></div>'
       + (e.updated?'<div class="updated-line">Updated '+esc(fmtDate(e.updated))+'</div>':'')
       + '<div class="objective"><div class="blocktitle">'+ic("target")+' Objective</div><p>'+esc(e.objective)+'</p></div>'
+      + briefFileHTML(e)
       + '<div style="margin-top:22px" class="blocktitle">'+ic("chat")+' Main talking points <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0"> · tone: '+esc(e.tone)+'</span></div>'+talkingHTML(e)
       + watchHTML(e)
       + anticipatedHTML(e)
@@ -736,6 +764,7 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
     var dc=t.closest("[data-day]"); if(dc){ state.selDate=dc.dataset.day; renderSchedule(); return; }
     var ob=t.closest("[data-openbrief]"); if(ob){ state.briefId=ob.dataset.openbrief; go("briefs"); return; }
     var sg=t.closest("[data-ask]"); if(sg){ var qi=el("askInput"); if(qi) qi.value=sg.dataset.ask; answer(sg.dataset.ask); return; }
+    var vp=t.closest("[data-viewpdf]"); if(vp){ togglePdf(vp); return; }
     var id=(t.closest("button")||{}).id;
     if(id==="btnImport") el("fileInput").click();
     else if(id==="btnExport") exportData();
@@ -799,7 +828,7 @@ h1 { margin-top: 8px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02e
 ```javascript
 /* Service worker — NETWORK-FIRST so new deploys show up immediately when online,
    with a cached copy as offline fallback. Bump CACHE on each shell change. */
-var CACHE = "briefbuddy-v3";
+var CACHE = "briefbuddy-v4";
 var SHELL = [
   ".",
   "index.html",
