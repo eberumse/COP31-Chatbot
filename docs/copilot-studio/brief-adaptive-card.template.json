@@ -1,0 +1,48 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "body": [
+    { "type": "TextBlock", "text": "⏱ NEXT MEETING IN ${minutesUntil} MIN", "size": "Small", "weight": "Bolder", "color": "Accent", "spacing": "None", "wrap": true },
+    { "type": "TextBlock", "text": "${title}", "size": "ExtraLarge", "weight": "Bolder", "spacing": "Small", "wrap": true },
+    { "type": "TextBlock", "text": "🕒 ${startTime}–${endTime}   📍 ${venue}   ·   ${type}", "isSubtle": true, "size": "Small", "spacing": "None", "wrap": true },
+
+    { "type": "Container", "separator": true, "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "OBJECTIVE", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "TextBlock", "text": "${objective}", "wrap": true }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "MAIN TALKING POINTS", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "Container", "$data": "${sayThis}", "items": [
+        { "type": "TextBlock", "text": "• ${$data}", "wrap": true, "spacing": "Small" }
+      ]}
+    ]},
+
+    { "type": "Container", "style": "attention", "spacing": "Medium", "bleed": true, "items": [
+      { "type": "TextBlock", "text": "⚠ WATCH POINT — THE ONE THING TO AVOID", "weight": "Bolder", "size": "Small", "spacing": "None", "wrap": true },
+      { "type": "TextBlock", "text": "${watchPoint}", "wrap": true }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "COUNTERPART", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "FactSet", "facts": [
+        { "title": "Name", "value": "${counterpart.name}" },
+        { "title": "Role", "value": "${counterpart.role} · ${counterpart.country}" },
+        { "title": "Portfolio", "value": "${counterpart.portfolio}" }
+      ]},
+      { "type": "TextBlock", "text": "Public background: ${counterpart.publicBackground}", "wrap": true, "isSubtle": true, "size": "Small", "spacing": "Small" }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "IF ASKED / PRESSED", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "TextBlock", "text": "${ifAsked}", "wrap": true }
+    ]},
+
+    { "type": "TextBlock", "text": "Summarised from the cleared brief in SharePoint · review before use.", "size": "Small", "isSubtle": true, "wrap": true, "spacing": "Medium" }
+  ],
+  "actions": [
+    { "type": "Action.OpenUrl", "title": "📄 Open full brief (PDF)", "url": "${briefUrl}" },
+    { "type": "Action.Submit", "title": "💬 Ask a follow-up", "data": { "action": "askFollowUp", "briefId": "${id}" } }
+  ]
+}

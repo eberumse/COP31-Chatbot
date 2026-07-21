@@ -1,0 +1,49 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.5",
+  "metadata": { "note": "FICTIONAL SAMPLE — populated preview of the pre-meeting brief card. Preview it at https://adaptivecards.io/designer" },
+  "body": [
+    { "type": "TextBlock", "text": "⏱ NEXT MEETING IN 15 MIN  ·  FICTIONAL SAMPLE", "size": "Small", "weight": "Bolder", "color": "Accent", "spacing": "None", "wrap": true },
+    { "type": "TextBlock", "text": "Bilateral with Country A", "size": "ExtraLarge", "weight": "Bolder", "spacing": "Small", "wrap": true },
+    { "type": "TextBlock", "text": "🕒 15:00–15:30   📍 Bilateral Room 4B, Level 2   ·   Bilateral", "isSubtle": true, "size": "Small", "spacing": "None", "wrap": true },
+
+    { "type": "Container", "separator": true, "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "OBJECTIVE", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "TextBlock", "text": "Secure Country A's support for balanced finance text and confirm alignment on carbon markets.", "wrap": true }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "MAIN TALKING POINTS", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "TextBlock", "text": "• Thank Minister A for Country A's constructive role in the coalition this week.", "wrap": true, "spacing": "Small" },
+      { "type": "TextBlock", "text": "• Reaffirm Singapore supports ambition where implementation flexibility is preserved.", "wrap": true, "spacing": "Small" },
+      { "type": "TextBlock", "text": "• Ask Country A to back the balanced finance formulation and not reopen settled text.", "wrap": true, "spacing": "Small" }
+    ]},
+
+    { "type": "Container", "style": "attention", "spacing": "Medium", "bleed": true, "items": [
+      { "type": "TextBlock", "text": "⚠ WATCH POINT — THE ONE THING TO AVOID", "weight": "Bolder", "size": "Small", "spacing": "None", "wrap": true },
+      { "type": "TextBlock", "text": "Do not commit to any finance figure or language beyond the approved envelope.", "wrap": true }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "COUNTERPART", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "FactSet", "facts": [
+        { "title": "Name", "value": "H.E. Minister A" },
+        { "title": "Role", "value": "Minister for Climate and Energy · Country A" },
+        { "title": "Portfolio", "value": "Climate negotiations · energy transition · finance" }
+      ]},
+      { "type": "TextBlock", "text": "Public background: Country A's Minister for Climate and Energy since 2024; delivered Country A's national statement at the opening of the high-level segment.", "wrap": true, "isSubtle": true, "size": "Small", "spacing": "Small" }
+    ]},
+
+    { "type": "Container", "spacing": "Medium", "items": [
+      { "type": "TextBlock", "text": "IF ASKED / PRESSED", "weight": "Bolder", "size": "Small", "color": "Accent", "spacing": "None" },
+      { "type": "TextBlock", "text": "Officials can continue technical talks, but new language must preserve implementation flexibility.", "wrap": true }
+    ]},
+
+    { "type": "TextBlock", "text": "Summarised from the cleared brief in SharePoint · review before use.", "size": "Small", "isSubtle": true, "wrap": true, "spacing": "Medium" }
+  ],
+  "actions": [
+    { "type": "Action.OpenUrl", "title": "📄 Open full brief (PDF)", "url": "https://YOUR-TENANT.sharepoint.com/sites/Briefs/Cleared/brief_03_bilateral-country-a.pdf" },
+    { "type": "Action.Submit", "title": "💬 Ask a follow-up", "data": { "action": "askFollowUp", "briefId": "bilateral-country-a" } }
+  ]
+}

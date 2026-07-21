@@ -1,0 +1,25 @@
+{
+  "minutesUntil": 15,
+  "id": "bilateral-country-a",
+  "title": "Bilateral with Country A",
+  "type": "Bilateral",
+  "startTime": "15:00",
+  "endTime": "15:30",
+  "venue": "Bilateral Room 4B, Level 2",
+  "objective": "Secure Country A's support for balanced finance text and confirm alignment on carbon markets.",
+  "sayThis": [
+    "Thank Minister A for Country A's constructive role in the coalition this week.",
+    "Reaffirm Singapore supports ambition where implementation flexibility is preserved.",
+    "Ask Country A to back the balanced finance formulation and not reopen settled text."
+  ],
+  "watchPoint": "Do not commit to any finance figure or language beyond the approved envelope.",
+  "ifAsked": "Officials can continue technical talks, but new language must preserve implementation flexibility.",
+  "counterpart": {
+    "name": "H.E. Minister A",
+    "role": "Minister for Climate and Energy",
+    "country": "Country A",
+    "portfolio": "Climate negotiations · energy transition · finance",
+    "publicBackground": "Country A's Minister for Climate and Energy since 2024; delivered Country A's national statement at the opening of the high-level segment."
+  },
+  "briefUrl": "https://YOUR-TENANT.sharepoint.com/sites/Briefs/Cleared/brief_03_bilateral-country-a.pdf"
+}
